@@ -1,4 +1,5 @@
-<title>NASCENT Mechanism Laboratory</title>
+<meta charset="utf-8" />
+<title>Geoeconomic Mechanism Lab</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
   /* ============================= TOKENS ============================= */
@@ -124,6 +125,13 @@
 
   section.mode { display: none; }
   section.mode.active { display: block; }
+
+  .subswitch { display:flex; gap:18px; border-bottom:1px solid var(--line); margin:0 0 24px; overflow-x:auto; }
+  .subswitch button { border:0; border-bottom:2px solid transparent; background:transparent; color:var(--ink-muted); padding:9px 1px 10px; cursor:pointer; font:600 12px var(--sans); white-space:nowrap; }
+  .subswitch button.active { color:var(--accent); border-bottom-color:var(--accent); }
+  .canet-submode { display:none; } .canet-submode.active { display:block; }
+  .dek-list { display:flex; gap:8px 24px; flex-wrap:wrap; margin:10px 0 0; padding:0; list-style:none; color:var(--ink-muted); font-size:13px; }
+  .dek-list li::before { content:"→"; color:var(--accent); margin-right:7px; font-family:var(--mono); }
 
   .mode-dek { color: var(--ink-muted); font-size: 14px; margin: 0 0 22px; max-width: 62ch; }
 
@@ -298,35 +306,25 @@
 <div class="wrap">
   <div class="masthead">
     <div class="masthead-text">
-      <p class="eyebrow">A Very Stylized Information Problem</p>
-      <h1>NASCENT Mechanism Laboratory</h1>
-      <p class="dek">From a stylized private-information auction to signed, interdependent geoeconomic policy bundles.</p>
+      <h1>Geoeconomic Mechanism Lab</h1>
+      <ul class="dek-list">
+        <li>Inject economic structure through GTAP/CGE outputs</li>
+        <li>Allow negative valuations and losses</li>
+        <li>Model cross-country effects and non-additive policy bundles</li>
+      </ul>
     </div>
     <button class="theme-toggle" id="themeToggle" type="button">THEME: SYSTEM</button>
   </div>
   <hr class="frame-line" />
 
-  <div class="modeswitch" role="tablist">
-    <button data-mode="design" class="active" role="tab">Design a Scenario</button>
-    <button data-mode="mechanism" role="tab">CANet</button>
-    <button data-mode="geograph" role="tab">Geo-Graph</button>
-    <button data-mode="notes" role="tab">Field Notes</button>
+  <div class="modeswitch" id="primaryTabs" role="tablist">
+    <button data-mode="geograph" class="active" role="tab">Geo-Graph · this month</button>
+    <button data-mode="canet" role="tab">CANet · last month</button>
   </div>
 
-  <!-- ============================= MODE: DESIGN ============================= -->
-  <section class="mode active" id="mode-design">
-    <p class="mode-dek">Set each country's valuations. <b>First-best</b> and <b>VCG</b> decide the allocation instantly — no training needed.</p>
-    <div class="stage">
-      <div class="panel panel-pad" id="designActors"></div>
-      <div class="panel panel-pad">
-        <div class="results-grid" id="designResults"></div>
-      </div>
-    </div>
-  </section>
-
   <!-- ============================= MODE: GEO-GRAPH ============================= -->
-  <section class="mode" id="mode-geograph">
-    <p class="mode-dek"><b>Geo-Graph</b> is a signed policy-bundle demonstrator based on the GTAP equivalent-variation table. It is a global policy planner, not a VCG auction: one tariff package affects every country at once.</p>
+  <section class="mode active" id="mode-geograph">
+    <p class="mode-dek"><b>Geo-Graph</b> uses GTAP equivalent variation to study one policy package that can help some countries and harm others. Compare a private/own-exposure abstraction with a setting where countries also care about policies directed at others.</p>
     <div class="stage">
       <div class="panel panel-pad">
         <div class="geo-controls" id="geoControls"></div>
@@ -337,24 +335,33 @@
     </div>
   </section>
 
-  <!-- ============================= MODE: MECHANISM ============================= -->
-  <section class="mode" id="mode-mechanism">
-    <p class="mode-dek">Real trained mechanisms, run live. Pick a world and see what it <i>actually does</i>.</p>
-    <div class="stage">
-      <div class="panel panel-pad">
-        <div class="model-picker" id="modelPicker"></div>
-        <div id="budgetPicker" class="budget-picker"></div>
-        <div id="mechActors"></div>
-      </div>
-      <div class="panel panel-pad">
-        <div class="results-grid" id="mechResults"></div>
+  <!-- ============================= MODE: CANET ============================= -->
+  <section class="mode" id="mode-canet">
+    <p class="mode-dek"><b>CANet</b> preserves last month's two-good, three-country private-information experiment. Here VCG and first-price comparisons are appropriate to the stylized auction assumptions.</p>
+    <div class="subswitch" id="canetTabs" role="tablist">
+      <button class="active" data-canet="design" role="tab">1 · Scenario &amp; exact benchmarks</button>
+      <button data-canet="mechanism" role="tab">2 · Trained CANet</button>
+      <button data-canet="notes" role="tab">3 · Results</button>
+    </div>
+
+    <div class="canet-submode active" id="canet-design">
+      <p class="mode-dek">Set each country's valuations. <b>First-best</b> and <b>VCG</b> decide the allocation instantly—no training needed.</p>
+      <div class="stage">
+        <div class="panel panel-pad" id="designActors"></div>
+        <div class="panel panel-pad"><div class="results-grid" id="designResults"></div></div>
       </div>
     </div>
-  </section>
 
-  <!-- ============================= MODE: FIELD NOTES ============================= -->
-  <section class="mode" id="mode-notes">
-    <p class="mode-dek">What four experiments found.</p>
+    <div class="canet-submode" id="canet-mechanism">
+      <p class="mode-dek">Real trained CANet mechanisms, run live. Pick a valuation world and see what the network does.</p>
+      <div class="stage">
+        <div class="panel panel-pad"><div class="model-picker" id="modelPicker"><p class="caption">Loading trained CANet checkpoints…</p></div><div id="budgetPicker" class="budget-picker"></div><div id="mechActors"></div></div>
+        <div class="panel panel-pad"><div class="results-grid" id="mechResults"></div></div>
+      </div>
+    </div>
+
+    <div class="canet-submode" id="canet-notes">
+      <p class="mode-dek">What the four CANet experiments found.</p>
 
     <div class="note-block">
       <p class="note-kicker">01 — Complete information</p>
@@ -402,6 +409,7 @@
       </div>
       <p style="margin-top:14px">Every model converged, seed-checked. <span class="cta-row"><button class="cta-btn" id="ctaTry">Try it yourself →</button></span></p>
     </div>
+    </div>
   </section>
 
   <footer class="colophon">
@@ -416,6 +424,7 @@
    ====================================================================== */
 const NAMES = ["Foreign", "Home Ally", "Foreign Ally"];
 const ACTOR_KEYS = ["china", "usally", "chinaally"];
+let MODEL_WEIGHTS = null;
 
 const SYMMETRIC_FRONTIER = {
   band: { vcg: 1.1180, firstBest: 1.5646 },
@@ -690,13 +699,19 @@ function actorSoftVar(i) { return `var(--${["china", "usally", "chinaally"][i]}-
 /* ======================================================================
    MODE SWITCH
    ====================================================================== */
-const modeButtons = document.querySelectorAll(".modeswitch button");
+const modeButtons = document.querySelectorAll("#primaryTabs button");
 function setMode(mode) {
   modeButtons.forEach((b) => b.classList.toggle("active", b.dataset.mode === mode));
   document.querySelectorAll("section.mode").forEach((s) => s.classList.toggle("active", s.id === "mode-" + mode));
 }
 modeButtons.forEach((b) => b.addEventListener("click", () => setMode(b.dataset.mode)));
-document.getElementById("ctaTry").addEventListener("click", () => setMode("mechanism"));
+function setCanetMode(mode) {
+  document.querySelectorAll("#canetTabs button").forEach((b) => b.classList.toggle("active", b.dataset.canet === mode));
+  document.querySelectorAll(".canet-submode").forEach((s) => s.classList.toggle("active", s.id === "canet-" + mode));
+  if (mode === "notes" && typeof redrawCharts === "function") requestAnimationFrame(redrawCharts);
+}
+document.querySelectorAll("#canetTabs button").forEach((b) => b.addEventListener("click", () => setCanetMode(b.dataset.canet)));
+document.getElementById("ctaTry").addEventListener("click", () => { setMode("canet"); setCanetMode("mechanism"); });
 
 /* ======================================================================
    ACTOR CARD BUILDER (shared by Design + Mechanism modes)
@@ -974,8 +989,12 @@ function recomputeMechanism() {
   renderLedger(document.getElementById("mechLedger"), probs, net.pay);
 }
 
-buildModelPicker();
-rebuildMechActors();
+fetch("report/web_models_grid.json")
+  .then((response) => { if (!response.ok) throw new Error(`HTTP ${response.status}`); return response.json(); })
+  .then((weights) => { MODEL_WEIGHTS = weights; buildModelPicker(); rebuildMechActors(); })
+  .catch(() => {
+    document.getElementById("modelPicker").innerHTML = '<div class="geo-warning"><b>CANet weights unavailable.</b> Use the hosted site or serve this folder over HTTP so the checkpoint asset can load.</div>';
+  });
 
 /* ======================================================================
    GEO-GRAPH — GTAP policy-bundle demonstrator
@@ -1010,8 +1029,15 @@ const GEO_OBJECTIVES = {
   bloc: { label:"U.S. + ally", weights:[1,0,1,0,0], desc:"U.S. and U.S.-ally equivalent variation" },
   security: { label:"Weighted coalition", weights:[1,-0.15,0.8,-0.1,0.15], desc:"illustrative signed geopolitical weights" },
 };
-let geoObjective = "global", geoPairs = true, geoTemp = 0.35;
-const geoScore = (p) => p.value.reduce((s,x,i) => s + x * GEO_OBJECTIVES[geoObjective].weights[i], 0);
+let geoDependence = "interdependent", geoObjective = "global", geoPairs = true, geoTemp = 0.35;
+const GEO_TARGETS = { China:{ key:"chn", country:1 }, "U.S. ally":{ key:"usally", country:2 }, "China ally":{ key:"chnally", country:3 } };
+function geoValue(p, dependence=geoDependence) {
+  if (dependence === "interdependent") return p.value;
+  const out=[0,0,0,0,0];
+  p.tools.forEach((tool) => { const t=GEO_TARGETS[tool]; out[t.country] += GEO_SINGLE[t.key][t.country]; });
+  return out;
+}
+const geoScore = (p, dependence=geoDependence) => geoValue(p,dependence).reduce((s,x,i) => s + x * GEO_OBJECTIVES[geoObjective].weights[i], 0);
 const geoFmt = (x) => `${x < 0 ? "−" : "+"}$${Math.abs(x).toLocaleString(undefined,{maximumFractionDigits:0})}m`;
 function geoAllowed() { return GEO_PACKAGES.filter((p) => geoPairs || p.observed); }
 function geoSoftmax(scores, temp) {
@@ -1020,10 +1046,12 @@ function geoSoftmax(scores, temp) {
 function buildGeoControls() {
   const el = document.getElementById("geoControls");
   el.innerHTML = `
+    <div><div class="geo-control-label">Valuation structure</div><div class="geo-options"><button class="geo-option ${geoDependence==="own"?"active":""}" data-dependence="own">1 · Own exposure only</button><button class="geo-option ${geoDependence==="interdependent"?"active":""}" data-dependence="interdependent">2 · Others matter</button></div><div class="caption">${geoDependence==="own"?"Private/separable abstraction: a country is affected only by the tariff directed at itself; cross-country effects and bundle interactions are masked.":"Interdependent formulation: every policy can change every country's utility; the observed all-three GTAP interaction is retained."}</div></div>
     <div><div class="geo-control-label">Designer objective</div><div class="geo-options">${Object.entries(GEO_OBJECTIVES).map(([id,o])=>`<button class="geo-option ${id===geoObjective?"active":""}" data-objective="${id}">${o.label}</button>`).join("")}</div><div class="caption">${GEO_OBJECTIVES[geoObjective].desc}</div></div>
     <div><div class="geo-control-label">Unobserved pair bundles</div><div class="geo-options"><button class="geo-option ${geoPairs?"active":""}" data-pairs="yes">Include additive interpolation</button><button class="geo-option ${!geoPairs?"active":""}" data-pairs="no">Observed GTAP packages only</button></div><div class="caption">Pairs were not run in GTAP. Their values equal the sum of singleton EVs when enabled.</div></div>
     <div><div class="geo-control-label">Geo-Graph mixture temperature <span class="tabular">${geoTemp.toFixed(2)}</span></div><input id="geoTemp" type="range" min="0.08" max="1" step="0.01" value="${geoTemp}" /><div class="caption">Lower temperature approaches the exact selected package; higher temperature shows a fractional policy mixture.</div></div>
-    <div class="geo-warning"><b>Interpretation:</b> this panel demonstrates signed, nonseparable policy effects and data gaps. It does not assert that an additive pair value, a weighted geopolitical objective, or a fractional tariff package is a structural GTAP counterfactual.</div>`;
+    <div class="geo-warning"><b>Interpretation:</b> “own exposure” is a deliberately restrictive ablation. “Others matter” uses the full GTAP incidence table. Neither the additive pair values, the illustrative geopolitical weights, nor a fractional tariff package should be read as a new structural GTAP counterfactual.</div>`;
+  el.querySelectorAll("[data-dependence]").forEach(b=>b.addEventListener("click",()=>{geoDependence=b.dataset.dependence; buildGeoControls(); renderGeo();}));
   el.querySelectorAll("[data-objective]").forEach(b=>b.addEventListener("click",()=>{geoObjective=b.dataset.objective; buildGeoControls(); renderGeo();}));
   el.querySelectorAll("[data-pairs]").forEach(b=>b.addEventListener("click",()=>{geoPairs=b.dataset.pairs==="yes"; buildGeoControls(); renderGeo();}));
   el.querySelector("#geoTemp").addEventListener("input",e=>{geoTemp=+e.target.value; renderGeo();});
@@ -1031,17 +1059,21 @@ function buildGeoControls() {
 function renderGeo() {
   const ps=geoAllowed(), scores=ps.map(geoScore), max=Math.max(...scores), best=ps[scores.indexOf(max)];
   const prob=geoSoftmax(scores,geoTemp);
-  const mix=GEO_COUNTRIES.map((_,i)=>prob.reduce((s,q,k)=>s+q*ps[k].value[i],0));
-  const total=best.value.reduce((a,b)=>a+b,0), compensate=best.value.reduce((s,x)=>s+Math.max(0,-x),0);
-  const allResidual=GEO_ALL.map((x,i)=>x-GEO_SINGLE.chn[i]-GEO_SINGLE.usally[i]-GEO_SINGLE.chnally[i]);
-  const pCards=ps.map((p,i)=>`<div class="geo-package ${p.id===best.id?"selected":""}"><div class="geo-package-name">${p.name}</div><div class="geo-package-sub">${p.observed?"GTAP observed":"pair: additive assumption"}</div><div class="geo-package-sub">score ${geoFmt(scores[i])} · mix ${(100*prob[i]).toFixed(1)}%</div></div>`).join("");
-  const rows=GEO_COUNTRIES.map((n,i)=>`<tr><td><span class="actor-chip" style="color:${GEO_COLORS[i]}"><span class="chip-dot" style="--dot-c:${GEO_COLORS[i]}"></span>${n}</span></td><td class="pay-cell"><span class="signed ${best.value[i]<0?"neg":"pos"}">${geoFmt(best.value[i])}</span></td><td class="pay-cell"><span class="signed ${mix[i]<0?"neg":"pos"}">${geoFmt(mix[i])}</span></td><td class="pay-cell"><span class="signed ${allResidual[i]<0?"neg":"pos"}">${geoFmt(allResidual[i])}</span></td></tr>`).join("");
+  const bestValue=geoValue(best), mix=GEO_COUNTRIES.map((_,i)=>prob.reduce((s,q,k)=>s+q*geoValue(ps[k])[i],0));
+  const mixtureScore=prob.reduce((s,q,k)=>s+q*scores[k],0);
+  const myopicScores=ps.map((p)=>geoScore(p,"own")), myopic=ps[myopicScores.indexOf(Math.max(...myopicScores))], myopicScore=geoScore(myopic);
+  const total=bestValue.reduce((a,b)=>a+b,0), compensate=bestValue.reduce((s,x)=>s+Math.max(0,-x),0);
+  const all=GEO_PACKAGES.find(p=>p.id==="all"), allValue=geoValue(all);
+  const allResidual=allValue.map((x,i)=>x-geoValue(GEO_PACKAGES.find(p=>p.id==="chn"))[i]-geoValue(GEO_PACKAGES.find(p=>p.id==="usally"))[i]-geoValue(GEO_PACKAGES.find(p=>p.id==="chnally"))[i]);
+  const pCards=ps.map((p,i)=>`<div class="geo-package ${p.id===best.id?"selected":""}"><div class="geo-package-name">${p.name}</div><div class="geo-package-sub">${geoDependence==="own"?"own effect only":(p.observed?"GTAP observed":"pair: additive assumption")}</div><div class="geo-package-sub">score ${geoFmt(scores[i])} · mix ${(100*prob[i]).toFixed(1)}%</div></div>`).join("");
+  const rows=GEO_COUNTRIES.map((n,i)=>`<tr><td><span class="actor-chip" style="color:${GEO_COLORS[i]}"><span class="chip-dot" style="--dot-c:${GEO_COLORS[i]}"></span>${n}</span></td><td class="pay-cell"><span class="signed ${bestValue[i]<0?"neg":"pos"}">${geoFmt(bestValue[i])}</span></td><td class="pay-cell"><span class="signed ${mix[i]<0?"neg":"pos"}">${geoFmt(mix[i])}</span></td><td class="pay-cell"><span class="signed ${allResidual[i]<0?"neg":"pos"}">${geoFmt(allResidual[i])}</span></td></tr>`).join("");
   document.getElementById("geoResults").innerHTML=`
-    <div class="revenue-row"><div class="stat-tile hi"><div class="stat-label">Exact selected package</div><div class="stat-value" style="font-size:21px">${best.name}</div><div class="stat-sub">${best.observed?"GTAP observed package":"depends on additive pair assumption"}</div></div><div class="stat-tile"><div class="stat-label">Objective score</div><div class="stat-value">${geoFmt(max)}</div><div class="stat-sub">${GEO_OBJECTIVES[geoObjective].label}</div></div><div class="stat-tile"><div class="stat-label">Geo-Graph audit</div><div class="stat-value">99.41%</div><div class="stat-sub">exact-package agreement on synthetic sensitivity draws</div></div></div>
+    <div class="revenue-row"><div class="stat-tile"><div class="stat-label">Status-quo reference</div><div class="stat-value">$0m</div><div class="stat-sub">no tariff-package change</div></div><div class="stat-tile"><div class="stat-label">Separable / myopic benchmark</div><div class="stat-value" style="font-size:19px">${myopic.name}</div><div class="stat-sub">evaluated score ${geoFmt(myopicScore)}</div></div><div class="stat-tile hi"><div class="stat-label">Exact joint-planner ceiling</div><div class="stat-value" style="font-size:19px">${best.name}</div><div class="stat-sub">objective score ${geoFmt(max)}</div></div></div>
+    <div class="revenue-row"><div class="stat-tile"><div class="stat-label">Geo-Graph continuous mixture</div><div class="stat-value">${geoFmt(mixtureScore)}</div><div class="stat-sub">gap to exact ${geoFmt(max-mixtureScore)}</div></div><div class="stat-tile"><div class="stat-label">Held-out network audit</div><div class="stat-value">${geoDependence==="interdependent"?"99.41%":"—"}</div><div class="stat-sub">${geoDependence==="interdependent"?"exact-package agreement on synthetic sensitivity draws":"own-exposure view is an ablation, not a trained checkpoint"}</div></div></div>
     <div><div class="stat-label">Policy package space</div><div class="geo-packages">${pCards}</div><p class="caption">The selected package is exact enumeration over this finite display set. The mixture is the continuous differentiable-policy visualization.</p></div>
-    <div class="ledger"><table class="ledger-table"><thead><tr><th>Country</th><th>Selected EV</th><th>Mixture EV</th><th>All-three synergy</th></tr></thead><tbody>${rows}</tbody></table><p class="caption">EV = equivalent variation, million USD. All-three synergy = observed all-three EV minus the three singleton EVs; it is a direct non-additivity diagnostic.</p></div>
+    <div class="ledger"><table class="ledger-table"><thead><tr><th>Country</th><th>Selected EV</th><th>Mixture EV</th><th>All-three interaction</th></tr></thead><tbody>${rows}</tbody></table><p class="caption">EV = equivalent variation, million USD. The interaction column is all-three EV minus the three singleton EVs; it is zero by construction in the own-exposure ablation and observed in the full model.</p></div>
     <div class="revenue-row"><div class="stat-tile"><div class="stat-label">Global EV, selected</div><div class="stat-value">${geoFmt(total)}</div><div class="stat-sub">transfers do not change this total</div></div><div class="stat-tile"><div class="stat-label">Minimum IR compensation</div><div class="stat-value">$${compensate.toLocaleString(undefined,{maximumFractionDigits:0})}m</div><div class="stat-sub">to bring negative-EV countries to zero</div></div><div class="stat-tile"><div class="stat-label">Missing GTAP runs</div><div class="stat-value">3</div><div class="stat-sub">the pair packages are the priority data request</div></div></div>
-    <p class="insight">${best.id==="none"?"Under <b>global welfare</b>, every observed tariff package has negative aggregate EV, so the full-information planner retains <b>status quo</b>.":`Under <b>${GEO_OBJECTIVES[geoObjective].label}</b>, the selected package is <b>${best.name}</b>. Its signed effects make participation and compensation a first-class mechanism constraint, not an afterthought.`}</p>`;
+    <p class="insight">${geoDependence==="own"?`With only own exposure, cross-country gains and losses disappear. The exact choice is <b>${best.name}</b>; this is the private-value-style baseline.`:(best.id==="none"?"Once all spillovers are counted under <b>global welfare</b>, every available tariff package has negative aggregate EV, so the exact planner retains <b>status quo</b>.":`When others' allocations matter, <b>${best.name}</b> is selected under ${GEO_OBJECTIVES[geoObjective].label}. This is where signed externalities, participation, and compensation enter the mechanism problem.`)}</p>`;
 }
 buildGeoControls(); renderGeo();
 
