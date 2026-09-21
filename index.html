@@ -1,0 +1,1180 @@
+<title>NASCENT Mechanism Laboratory</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  /* ============================= TOKENS ============================= */
+  :root {
+    --bg: #eceee9;
+    --surface: #f8f7f3;
+    --surface-2: #ffffff;
+    --ink: #1c2127;
+    --ink-muted: #5b6169;
+    --ink-faint: #8b8f88;
+    --line: rgba(28, 33, 39, 0.12);
+    --line-strong: rgba(28, 33, 39, 0.22);
+    --accent: #a3721f;
+    --accent-ink: #ffffff;
+    --accent-soft: rgba(163, 114, 31, 0.14);
+    --china: #a34a35;
+    --china-soft: rgba(163, 74, 53, 0.14);
+    --usally: #2b6e6b;
+    --usally-soft: rgba(43, 110, 107, 0.14);
+    --chinaally: #5f5480;
+    --chinaally-soft: rgba(95, 84, 128, 0.14);
+    --radius: 3px;
+    --serif: Georgia, "Iowan Old Style", "Palatino Linotype", "Book Antiqua", serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", "Cascadia Mono", "Consolas", "Roboto Mono", monospace;
+    --shadow: 0 1px 2px rgba(28, 33, 39, 0.06), 0 6px 20px -8px rgba(28, 33, 39, 0.18);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #12181f;
+      --surface: #1a222c;
+      --surface-2: #202b37;
+      --ink: #e8e6df;
+      --ink-muted: #97a0ab;
+      --ink-faint: #6b7480;
+      --line: rgba(232, 230, 223, 0.12);
+      --line-strong: rgba(232, 230, 223, 0.22);
+      --accent: #d1a44e;
+      --accent-ink: #17120a;
+      --accent-soft: rgba(209, 164, 78, 0.16);
+      --china: #c9705a;
+      --china-soft: rgba(201, 112, 90, 0.18);
+      --usally: #4f9a96;
+      --usally-soft: rgba(79, 154, 150, 0.18);
+      --chinaally: #9186b3;
+      --chinaally-soft: rgba(145, 134, 179, 0.18);
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #12181f; --surface: #1a222c; --surface-2: #202b37;
+    --ink: #e8e6df; --ink-muted: #97a0ab; --ink-faint: #6b7480;
+    --line: rgba(232, 230, 223, 0.12); --line-strong: rgba(232, 230, 223, 0.22);
+    --accent: #d1a44e; --accent-ink: #17120a; --accent-soft: rgba(209, 164, 78, 0.16);
+    --china: #c9705a; --china-soft: rgba(201, 112, 90, 0.18);
+    --usally: #4f9a96; --usally-soft: rgba(79, 154, 150, 0.18);
+    --chinaally: #9186b3; --chinaally-soft: rgba(145, 134, 179, 0.18);
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+  }
+  :root[data-theme="light"] {
+    --bg: #eceee9; --surface: #f8f7f3; --surface-2: #ffffff;
+    --ink: #1c2127; --ink-muted: #5b6169; --ink-faint: #8b8f88;
+    --line: rgba(28, 33, 39, 0.12); --line-strong: rgba(28, 33, 39, 0.22);
+    --accent: #a3721f; --accent-ink: #ffffff; --accent-soft: rgba(163, 114, 31, 0.14);
+    --china: #a34a35; --china-soft: rgba(163, 74, 53, 0.14);
+    --usally: #2b6e6b; --usally-soft: rgba(43, 110, 107, 0.14);
+    --chinaally: #5f5480; --chinaally-soft: rgba(95, 84, 128, 0.14);
+    --shadow: 0 1px 2px rgba(28, 33, 39, 0.06), 0 6px 20px -8px rgba(28, 33, 39, 0.18);
+  }
+
+  * { box-sizing: border-box; }
+  html { color-scheme: light dark; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--accent-soft); }
+  .tabular { font-variant-numeric: tabular-nums; font-family: var(--mono); }
+
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 28px 22px 80px; }
+
+  /* ============================= MASTHEAD ============================= */
+  .masthead { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; margin-bottom: 6px; }
+  .masthead-text { max-width: 640px; }
+  .eyebrow {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent); margin: 0 0 8px;
+  }
+  h1 {
+    font-family: var(--serif); font-weight: 400; font-size: clamp(28px, 4vw, 40px);
+    margin: 0 0 8px; letter-spacing: -0.01em; text-wrap: balance; color: var(--ink);
+  }
+  .dek { color: var(--ink-muted); margin: 0; max-width: 54ch; font-size: 15px; }
+  .theme-toggle {
+    border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink-muted);
+    border-radius: 999px; padding: 6px 12px; font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.04em; cursor: pointer; white-space: nowrap;
+  }
+  .theme-toggle:hover { border-color: var(--accent); color: var(--ink); }
+
+  .frame-line { border: none; border-top: 1px solid var(--line); margin: 22px 0 0; }
+
+  /* ============================= MODE SWITCH ============================= */
+  .modeswitch {
+    display: flex; gap: 2px; margin: 20px 0 26px; background: var(--surface);
+    border: 1px solid var(--line); border-radius: var(--radius); padding: 3px; width: fit-content;
+  }
+  .modeswitch button {
+    font-family: var(--sans); font-size: 13px; font-weight: 600; letter-spacing: 0.01em;
+    border: none; background: transparent; color: var(--ink-muted); padding: 9px 16px;
+    border-radius: 2px; cursor: pointer; transition: background 0.15s, color 0.15s;
+  }
+  .modeswitch button:hover { color: var(--ink); }
+  .modeswitch button.active { background: var(--ink); color: var(--bg); }
+  :root[data-theme="dark"] .modeswitch button.active,
+  @media (prefers-color-scheme: dark) { .modeswitch button.active { background: var(--accent); color: var(--accent-ink); } }
+  :root[data-theme="dark"] .modeswitch button.active { background: var(--accent); color: var(--accent-ink); }
+
+  section.mode { display: none; }
+  section.mode.active { display: block; }
+
+  .mode-dek { color: var(--ink-muted); font-size: 14px; margin: 0 0 22px; max-width: 62ch; }
+
+  /* ============================= LAYOUT ============================= */
+  .stage { display: grid; grid-template-columns: 300px 1fr; gap: 22px; align-items: start; }
+  @media (max-width: 860px) { .stage { grid-template-columns: 1fr; } }
+
+  .panel {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+  .panel-pad { padding: 18px; }
+
+  /* ============================= MODEL PICKER ============================= */
+  .model-picker { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
+  .model-btn {
+    text-align: left; border: 1px solid var(--line); background: var(--surface-2); border-radius: var(--radius);
+    padding: 10px 12px; cursor: pointer; transition: border-color 0.15s, background 0.15s;
+  }
+  .model-btn:hover { border-color: var(--line-strong); }
+  .model-btn.active { border-color: var(--accent); background: var(--accent-soft); }
+  .model-btn .mb-name { font-weight: 700; font-size: 13px; color: var(--ink); display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+  .model-btn .mb-desc { font-size: 12px; color: var(--ink-muted); margin-top: 2px; line-height: 1.35; }
+  .model-btn .mb-sign { font-family: var(--mono); font-size: 11px; color: var(--accent); flex-basis: 100%; }
+
+  .budget-picker { margin: 4px 0 18px; }
+  .budget-picker-label { display: flex; justify-content: space-between; font-size: 11.5px; color: var(--ink-muted); margin-bottom: 6px; }
+  .budget-picker-label b { color: var(--ink); font-weight: 600; }
+  .budget-picker-label .val { font-family: var(--mono); color: var(--accent); font-weight: 600; }
+  .budget-row { display: flex; gap: 2px; background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius); padding: 3px; }
+  .budget-tab {
+    flex: 1; text-align: center; font-family: var(--mono); font-size: 11px; padding: 7px 4px;
+    border: none; background: transparent; color: var(--ink-muted); cursor: pointer; border-radius: 2px;
+    transition: background 0.15s, color 0.15s;
+  }
+  .budget-tab:hover { color: var(--ink); }
+  .budget-tab.active { background: var(--ink); color: var(--bg); }
+  :root[data-theme="dark"] .budget-tab.active { background: var(--accent); color: var(--accent-ink); }
+  @media (prefers-color-scheme: dark) { .budget-tab.active { background: var(--accent); color: var(--accent-ink); } }
+  :root[data-theme="light"] .budget-tab.active { background: var(--ink); color: var(--bg); }
+  .budget-caption { font-size: 11px; color: var(--ink-faint); margin-top: 6px; line-height: 1.4; }
+
+  /* ============================= ACTOR CARDS ============================= */
+  .actor-card {
+    border-left: 3px solid var(--actor-c, var(--accent));
+    background: var(--surface-2); border: 1px solid var(--line); border-left-width: 3px;
+    border-radius: var(--radius); padding: 14px; margin-bottom: 12px;
+  }
+  .actor-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
+  .actor-name { font-weight: 700; font-size: 13.5px; color: var(--actor-c, var(--ink)); }
+  .actor-role { font-size: 10.5px; color: var(--ink-faint); font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.06em; }
+
+  .slider-row { margin-bottom: 9px; }
+  .slider-row:last-child { margin-bottom: 0; }
+  .slider-label { display: flex; justify-content: space-between; font-size: 11.5px; color: var(--ink-muted); margin-bottom: 3px; }
+  .slider-label b { color: var(--ink); font-weight: 600; }
+  .slider-label .val { font-family: var(--mono); color: var(--actor-c, var(--ink)); font-weight: 600; }
+  input[type="range"] {
+    -webkit-appearance: none; appearance: none; width: 100%; height: 3px;
+    background: var(--line-strong); border-radius: 2px; outline: none; cursor: pointer;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 13px; height: 13px; border-radius: 50%;
+    background: var(--actor-c, var(--accent)); border: 2px solid var(--surface-2); cursor: grab;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 13px; height: 13px; border-radius: 50%; background: var(--actor-c, var(--accent));
+    border: 2px solid var(--surface-2); cursor: grab;
+  }
+  input[type="range"]:disabled { opacity: 0.35; cursor: not-allowed; }
+  .slider-note { font-size: 10.5px; color: var(--ink-faint); margin-top: 4px; font-style: italic; }
+
+  .reset-link {
+    font-family: var(--mono); font-size: 11px; color: var(--ink-muted); background: none; border: none;
+    cursor: pointer; padding: 0; text-decoration: underline; text-underline-offset: 2px;
+  }
+  .reset-link:hover { color: var(--accent); }
+
+  /* ============================= RESULTS ============================= */
+  .results-grid { display: flex; flex-direction: column; gap: 16px; }
+
+  .revenue-row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .stat-tile {
+    flex: 1; min-width: 140px; background: var(--surface-2); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 14px 16px;
+  }
+  .stat-tile.hi { border-color: var(--accent); background: var(--accent-soft); }
+  .stat-label { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-muted); margin-bottom: 6px; }
+  .stat-value { font-family: var(--mono); font-size: 26px; font-weight: 600; color: var(--ink); line-height: 1; }
+  .stat-tile.hi .stat-value { color: var(--accent); }
+  .stat-sub { font-size: 11px; color: var(--ink-faint); margin-top: 5px; }
+
+  .payrule-toggle { display: inline-flex; gap: 2px; background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius); padding: 2px; }
+  .payrule-toggle button { font-family: var(--mono); font-size: 11px; padding: 5px 10px; border: none; background: transparent; color: var(--ink-muted); cursor: pointer; border-radius: 2px; }
+  .payrule-toggle button.active { background: var(--ink); color: var(--bg); }
+
+  /* ledger table */
+  .ledger { width: 100%; overflow-x: auto; }
+  table.ledger-table { width: 100%; border-collapse: collapse; background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  table.ledger-table th, table.ledger-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--line); font-size: 13px; }
+  table.ledger-table th { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-muted); font-weight: 600; background: var(--surface); }
+  table.ledger-table tr:last-child td { border-bottom: none; }
+  .actor-chip { display: inline-flex; align-items: center; gap: 7px; font-weight: 700; }
+  .chip-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--dot-c, currentColor); flex: none; }
+  .alloc-cell { position: relative; }
+  .alloc-bar-track { position: relative; height: 22px; background: var(--line); border-radius: 2px; overflow: hidden; min-width: 90px; }
+  .alloc-bar-fill { position: absolute; inset: 0 auto 0 0; background: var(--fill-c, var(--accent)); border-radius: 2px; transition: width 0.2s ease; }
+  .alloc-bar-label { position: relative; z-index: 1; font-family: var(--mono); font-size: 11px; padding: 0 8px; line-height: 22px; color: var(--ink); mix-blend-mode: normal; }
+  td.pay-cell { font-family: var(--mono); text-align: right; color: var(--ink-muted); }
+  td.pay-cell b { color: var(--ink); }
+
+  .insight {
+    font-family: var(--serif); font-size: 15px; line-height: 1.55; color: var(--ink);
+    border-left: 3px solid var(--accent); padding: 4px 0 4px 14px; margin: 0;
+  }
+  .insight b { color: var(--accent); font-weight: 700; }
+
+  .caption { font-size: 11.5px; color: var(--ink-faint); margin-top: 4px; }
+
+  /* ============================= GEO-GRAPH ============================= */
+  .geo-controls { display: grid; gap: 14px; }
+  .geo-control-label { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-muted); margin-bottom: 6px; }
+  .geo-options { display: flex; flex-wrap: wrap; gap: 6px; }
+  .geo-option { border: 1px solid var(--line); background: var(--surface-2); color: var(--ink-muted); border-radius: 2px; padding: 7px 9px; cursor: pointer; font: 11px var(--sans); }
+  .geo-option.active { color: var(--ink); border-color: var(--accent); background: var(--accent-soft); font-weight: 700; }
+  .geo-packages { display:grid; grid-template-columns:repeat(auto-fit,minmax(132px,1fr)); gap:7px; }
+  .geo-package { padding:9px; border:1px solid var(--line); background:var(--surface-2); border-radius:2px; }
+  .geo-package.selected { border-color:var(--accent); background:var(--accent-soft); }
+  .geo-package-name { font-size:12px; font-weight:700; }
+  .geo-package-sub { font:10px var(--mono); color:var(--ink-faint); margin-top:3px; }
+  .geo-warning { border-left:3px solid var(--china); padding:7px 0 7px 11px; color:var(--ink-muted); font-size:12px; line-height:1.45; }
+  .signed.pos { color:var(--usally); font-weight:700; } .signed.neg { color:var(--china); font-weight:700; }
+
+  /* ============================= FIELD NOTES ============================= */
+  .notes-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 26px; align-items: start; }
+  @media (max-width: 900px) { .notes-grid { grid-template-columns: 1fr; } }
+  .note-block { margin-bottom: 30px; }
+  .note-block h2 { font-family: var(--serif); font-weight: 400; font-size: 21px; margin: 0 0 4px; }
+  .note-block .note-kicker { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin: 0 0 6px; }
+  .note-block p { color: var(--ink-muted); font-size: 13.5px; line-height: 1.6; max-width: 62ch; }
+  .note-block p b { color: var(--ink); }
+  canvas.chart { width: 100%; height: auto; display: block; background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius); }
+  .chart-wrap { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); }
+  .chart-title { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-muted); margin-bottom: 10px; }
+  .legend-row { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 10px; font-size: 11.5px; color: var(--ink-muted); }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-swatch { width: 10px; height: 10px; border-radius: 2px; }
+
+  .compare-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  .compare-table th, .compare-table td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: left; }
+  .compare-table th { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-muted); }
+  .compare-table td.num { font-family: var(--mono); text-align: right; }
+
+  .cta-row { margin-top: 8px; }
+  .cta-btn {
+    font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.03em; padding: 8px 14px;
+    background: var(--ink); color: var(--bg); border: none; border-radius: 2px; cursor: pointer;
+  }
+  :root[data-theme="dark"] .cta-btn { background: var(--accent); color: var(--accent-ink); }
+  @media (prefers-color-scheme: dark) { .cta-btn { background: var(--accent); color: var(--accent-ink); } }
+  :root[data-theme="light"] .cta-btn { background: var(--ink); color: var(--bg); }
+
+  footer.colophon { margin-top: 60px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 11.5px; color: var(--ink-faint); }
+  footer.colophon a { color: var(--ink-muted); }
+
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+
+<div class="wrap">
+  <div class="masthead">
+    <div class="masthead-text">
+      <p class="eyebrow">A Very Stylized Information Problem</p>
+      <h1>NASCENT Mechanism Laboratory</h1>
+      <p class="dek">From a stylized private-information auction to signed, interdependent geoeconomic policy bundles.</p>
+    </div>
+    <button class="theme-toggle" id="themeToggle" type="button">THEME: SYSTEM</button>
+  </div>
+  <hr class="frame-line" />
+
+  <div class="modeswitch" role="tablist">
+    <button data-mode="design" class="active" role="tab">Design a Scenario</button>
+    <button data-mode="mechanism" role="tab">CANet</button>
+    <button data-mode="geograph" role="tab">Geo-Graph</button>
+    <button data-mode="notes" role="tab">Field Notes</button>
+  </div>
+
+  <!-- ============================= MODE: DESIGN ============================= -->
+  <section class="mode active" id="mode-design">
+    <p class="mode-dek">Set each country's valuations. <b>First-best</b> and <b>VCG</b> decide the allocation instantly — no training needed.</p>
+    <div class="stage">
+      <div class="panel panel-pad" id="designActors"></div>
+      <div class="panel panel-pad">
+        <div class="results-grid" id="designResults"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= MODE: GEO-GRAPH ============================= -->
+  <section class="mode" id="mode-geograph">
+    <p class="mode-dek"><b>Geo-Graph</b> is a signed policy-bundle demonstrator based on the GTAP equivalent-variation table. It is a global policy planner, not a VCG auction: one tariff package affects every country at once.</p>
+    <div class="stage">
+      <div class="panel panel-pad">
+        <div class="geo-controls" id="geoControls"></div>
+      </div>
+      <div class="panel panel-pad">
+        <div class="results-grid" id="geoResults"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= MODE: MECHANISM ============================= -->
+  <section class="mode" id="mode-mechanism">
+    <p class="mode-dek">Real trained mechanisms, run live. Pick a world and see what it <i>actually does</i>.</p>
+    <div class="stage">
+      <div class="panel panel-pad">
+        <div class="model-picker" id="modelPicker"></div>
+        <div id="budgetPicker" class="budget-picker"></div>
+        <div id="mechActors"></div>
+      </div>
+      <div class="panel panel-pad">
+        <div class="results-grid" id="mechResults"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= MODE: FIELD NOTES ============================= -->
+  <section class="mode" id="mode-notes">
+    <p class="mode-dek">What four experiments found.</p>
+
+    <div class="note-block">
+      <p class="note-kicker">01 — Complete information</p>
+      <h2>The optimum is always a corner</h2>
+      <p>Each good goes entirely to one country — never split. In the worked example the Home Ally wins <b>both</b> goods (revenue 240): its alliance package is worth more bundled than either half is worth alone.</p>
+    </div>
+
+    <div class="note-block">
+      <div class="notes-grid">
+        <div>
+          <p class="note-kicker">02 — Private information</p>
+          <h2>The revenue-regret frontier</h2>
+          <p>No mechanism reaches first-best once values are private. A learned mechanism traces a frontier between the truthful VCG floor and the first-best ceiling — looser budgets buy revenue at the cost of regret.</p>
+        </div>
+        <div class="chart-wrap">
+          <div class="chart-title">Symmetric prior — revenue vs. achieved regret</div>
+          <canvas class="chart" id="frontierChart" width="640" height="360"></canvas>
+          <div class="legend-row">
+            <span class="legend-item"><span class="legend-swatch" style="background:var(--accent)"></span>learned mechanism</span>
+            <span class="legend-item"><span class="legend-swatch" style="background:var(--line-strong)"></span>VCG–first-best band</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note-block">
+      <div class="notes-grid">
+        <div>
+          <p class="note-kicker">03 — Three worlds</p>
+          <h2>Bundles exactly when goods complement</h2>
+          <p>Flip the sign, flip the behavior. <b>Unit demand</b>: splits (~7% bundling). <b>Complements</b>: bundles 100%. A <b>liability</b>: still bundles, but concentrates on the safe bidder instead.</p>
+        </div>
+        <div class="chart-wrap">
+          <div class="chart-title">Learned bundling frequency, by world</div>
+          <canvas class="chart" id="bundlingChart" width="560" height="320"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="note-block">
+      <p class="note-kicker">04 — Summary</p>
+      <h2>All four studies</h2>
+      <div class="ledger">
+        <table class="compare-table" id="summaryTable"></table>
+      </div>
+      <p style="margin-top:14px">Every model converged, seed-checked. <span class="cta-row"><button class="cta-btn" id="ctaTry">Try it yourself →</button></span></p>
+    </div>
+  </section>
+
+  <footer class="colophon">
+    CANet: exact toy benchmarks and trained weights, client-side. Geo-Graph: GTAP EV inputs with exact finite-package planning and a differentiable policy-mixture display. Units differ by panel.
+  </footer>
+</div>
+
+<script>
+"use strict";
+/* ======================================================================
+   DATA — precomputed experiment results (see report/*.json)
+   ====================================================================== */
+const NAMES = ["Foreign", "Home Ally", "Foreign Ally"];
+const ACTOR_KEYS = ["china", "usally", "chinaally"];
+
+const SYMMETRIC_FRONTIER = {
+  band: { vcg: 1.1180, firstBest: 1.5646 },
+  points: [
+    { regret: 0.00052, revenue: 1.1459 },
+    { regret: 0.00092, revenue: 1.1643 },
+    { regret: 0.00163, revenue: 1.1887 },
+    { regret: 0.00642, revenue: 1.2425 },
+    { regret: 0.015925, revenue: 1.30245 },
+    { regret: 0.054365, revenue: 1.42465 },
+    { regret: 0.062335, revenue: 1.449 },
+    { regret: 0.083905, revenue: 1.47865 },
+    { regret: 0.08337, revenue: 1.47865 },
+  ],
+};
+
+const WORLD_SUMMARY = {
+  substitutes: {
+    label: "Unit demand", sign: "γ < 0",
+    band: { vcg: 0.7970, firstBest: 1.4537 },
+    rows: [
+      { budget: 0.02, revenue: 1.407, regret: 0.05682, bundling: 5.81 },
+      { budget: 0.005, revenue: 1.232, regret: 0.01223, bundling: 7.32 },
+      { budget: 0.002, revenue: 1.191, regret: 0.00583, bundling: 6.76 },
+      { budget: 0.001, revenue: 1.153, regret: 0.00283, bundling: 6.74 },
+    ],
+  },
+  complements: {
+    label: "Complements", sign: "γ > 0",
+    band: { vcg: 0.9865, firstBest: 1.6301 },
+    rows: [
+      { budget: 0.02, revenue: 1.481, regret: 0.04668, bundling: 100, usAllyShare: 89.4 },
+      { budget: 0.005, revenue: 1.365, regret: 0.00898, bundling: 100, usAllyShare: 77.7 },
+      { budget: 0.002, revenue: 1.351, regret: 0.00636, bundling: 100, usAllyShare: 77.4 },
+      { budget: 0.001, revenue: 1.317, regret: 0.00260, bundling: 100, usAllyShare: 72.8 },
+    ],
+  },
+  liability: {
+    label: "Liability", sign: "γ > 0, σ_FA < 0",
+    band: { vcg: 0.7011, firstBest: 1.6301 },
+    rows: [
+      { budget: 0.02, revenue: 1.477, regret: 0.0497, bundling: 100, usAllyShare: 99.3 },
+      { budget: 0.005, revenue: 1.357, regret: 0.02275, bundling: 100, usAllyShare: 93.0 },
+      { budget: 0.002, revenue: 1.294, regret: 0.00709, bundling: 100, usAllyShare: 91.8 },
+      { budget: 0.001, revenue: 1.302, regret: 0.00207, bundling: 100, usAllyShare: 93.4 },
+    ],
+  },
+};
+
+// per-model UI metadata: default sliders + bounds + whether gamma is free
+const MODEL_META = {
+  symmetric: {
+    label: "Symmetric", sign: "γ ~ U(0, 0.25)",
+    desc: "All three countries identical. No favorites.",
+    // same box for every bidder -- the whole point of "symmetric"
+    bounds: [0, 1, 2].map(() => ({ a: [0, 1], s: [0, 1], g: [0, 0.25] })),
+    defaults: [
+      { a: 0.5, s: 0.5, g: 0.15 },
+      { a: 0.5, s: 0.5, g: 0.15 },
+      { a: 0.5, s: 0.5, g: 0.15 },
+    ],
+    gammaFree: true,
+  },
+  complements: {
+    label: "Complements", sign: "γ > 0",
+    desc: "Home Ally's money and security reinforce each other.",
+    // per-bidder training boxes (gamma_scale=0.25): Foreign, Home Ally, Foreign Ally
+    bounds: [
+      { a: [0.3, 0.7], s: [0.0, 0.3], g: [0, 0.1] },
+      { a: [0.3, 0.7], s: [0.6, 1.0], g: [0.15, 0.25] },
+      { a: [0.6, 1.0], s: [0.1, 0.4], g: [0, 0.1] },
+    ],
+    defaults: [
+      { a: 0.5, s: 0.15, g: 0.05 },
+      { a: 0.5, s: 0.8, g: 0.2 },
+      { a: 0.8, s: 0.25, g: 0.05 },
+    ],
+    gammaFree: true,
+  },
+  substitutes: {
+    label: "Unit demand", sign: "γ = −min(α, σ)",
+    desc: "Both goods together are worth no more than one alone.",
+    bounds: [0, 1, 2].map(() => ({ a: [0, 1], s: [0, 1], g: [0, 0] })),
+    defaults: [
+      { a: 0.5, s: 0.5, g: 0 },
+      { a: 0.5, s: 0.5, g: 0 },
+      { a: 0.5, s: 0.5, g: 0 },
+    ],
+    gammaFree: false,
+  },
+  liability: {
+    label: "Liability", sign: "Foreign security negative, others positive",
+    desc: "A Home security guarantee actively harms the Foreign Ally.",
+    // per-bidder training boxes: only the Foreign Ally's sigma goes negative
+    bounds: [
+      { a: [0.3, 0.7], s: [-0.2, 0.1], g: [0, 0.1] },
+      { a: [0.3, 0.7], s: [0.6, 1.0], g: [0.15, 0.25] },
+      { a: [0.6, 1.0], s: [-0.4, 0.0], g: [0, 0.1] },
+    ],
+    defaults: [
+      { a: 0.5, s: 0.0, g: 0.05 },
+      { a: 0.5, s: 0.8, g: 0.2 },
+      { a: 0.8, s: -0.15, g: 0.05 },
+    ],
+    gammaFree: true,
+  },
+};
+
+const EXAMPLE1 = [
+  { a: 0.8, s: 0.6, g: 0.5 },
+  { a: 0.6, s: 0.8, g: 1.0 },
+  { a: 1.0, s: 0.3, g: 0.2 },
+];
+
+/* ======================================================================
+   ANALYTICAL LAYER — exact corner enumeration (first-best / VCG)
+   Validated against the Gurobi MILP in report/ to machine precision.
+   ====================================================================== */
+function firstBest(alpha, sigma, gamma, withhold) {
+  const n = alpha.length;
+  const opts = withhold ? [...Array(n).keys(), -1] : [...Array(n).keys()];
+  let best = -Infinity, bestJe = -1, bestJg = -1;
+  for (const je of opts) {
+    for (const jg of opts) {
+      const a = je === -1 ? 0 : alpha[je];
+      const s = jg === -1 ? 0 : sigma[jg];
+      const g = je !== -1 && je === jg ? gamma[je] : 0;
+      const r = a + s + g;
+      if (r > best) { best = r; bestJe = je; bestJg = jg; }
+    }
+  }
+  return { revenue: best, je: bestJe, jg: bestJg };
+}
+function vcgRevenue(alpha, sigma, gamma, withhold) {
+  const n = alpha.length;
+  const { revenue: W, je, jg } = firstBest(alpha, sigma, gamma, withhold);
+  const v = new Array(n).fill(0);
+  if (je !== -1) v[je] += alpha[je];
+  if (jg !== -1) v[jg] += sigma[jg];
+  if (je !== -1 && je === jg) v[je] += gamma[je];
+  const payments = new Array(n).fill(0);
+  for (let i = 0; i < n; i++) {
+    const idx = [...Array(n).keys()].filter((k) => k !== i);
+    const aSub = idx.map((k) => alpha[k]), sSub = idx.map((k) => sigma[k]), gSub = idx.map((k) => gamma[k]);
+    const { revenue: wi } = firstBest(aSub, sSub, gSub, withhold);
+    const others = v.reduce((s, x) => s + x, 0) - v[i];
+    payments[i] = wi - others;
+  }
+  return { revenue: payments.reduce((a, b) => a + b, 0), W, je, jg, payments, values: v };
+}
+
+/* ======================================================================
+   NEURAL LAYER — CANet forward pass, ported from vsp_canet.py.
+   Numerically validated against PyTorch to < 2e-6 abs error.
+   ====================================================================== */
+function linear(W, b, x) {
+  const out = new Array(W.length);
+  for (let o = 0; o < W.length; o++) {
+    let s = b[o];
+    const row = W[o];
+    for (let i = 0; i < row.length; i++) s += row[i] * x[i];
+    out[o] = s;
+  }
+  return out;
+}
+const tanhVec = (v) => v.map(Math.tanh);
+function softmax1d(v) {
+  const m = Math.max(...v);
+  const ex = v.map((x) => Math.exp(x - m));
+  const s = ex.reduce((a, b) => a + b, 0);
+  return ex.map((x) => x / s);
+}
+function softmaxAxis0(mat) {
+  const rows = mat.length, cols = mat[0].length;
+  const out = Array.from({ length: rows }, () => new Array(cols));
+  for (let c = 0; c < cols; c++) {
+    const sm = softmax1d(mat.map((r) => r[c]));
+    for (let r = 0; r < rows; r++) out[r][c] = sm[r];
+  }
+  return out;
+}
+const softmaxAxis1 = (mat) => mat.map((row) => softmax1d(row));
+
+function netForward(model, x, c) {
+  const { n, m, k, temp, inc, n_agent_rows } = model;
+  const v = [];
+  for (let a = 0; a < n; a++) {
+    const row = new Array(k).fill(0);
+    for (let b = 0; b < k; b++) {
+      let s = 0;
+      for (let i = 0; i < m; i++) s += x[a][i] * inc[b][i];
+      row[b] = s;
+    }
+    v.push(row);
+  }
+  const start = k - 1;
+  for (let a = 0; a < n; a++) v[a][start] += c[a];
+
+  const x_in = [];
+  for (let a = 0; a < n; a++) for (let b = 0; b < k; b++) x_in.push(v[a][b]);
+
+  let h = tanhVec(linear(model.alloc_trunk[0].w, model.alloc_trunk[0].b, x_in));
+  h = tanhVec(linear(model.alloc_trunk[1].w, model.alloc_trunk[1].b, h));
+
+  const haFlat = linear(model.head_agent.w, model.head_agent.b, h);
+  const ha = [];
+  for (let r = 0; r < n_agent_rows; r++) ha.push(haFlat.slice(r * k, (r + 1) * k).map((z) => z / temp));
+  let a1 = softmaxAxis0(ha).slice(0, n);
+
+  const hbFlat = linear(model.head_bundle.w, model.head_bundle.b, h);
+  const hb = [];
+  for (let r = 0; r < n; r++) hb.push(hbFlat.slice(r * k, (r + 1) * k).map((z) => z / temp));
+  const a2 = softmaxAxis1(hb);
+
+  const agentBundle = a1.map((row, r) => row.map((val, ci) => Math.min(val, a2[r][ci])));
+
+  const hiFlat = linear(model.head_item.w, model.head_item.b, h);
+  const hi = [];
+  for (let r = 0; r < m; r++) hi.push(hiFlat.slice(r * k, (r + 1) * k).map((z) => z / temp / 2));
+  let itemBundle = softmaxAxis1(hi).map((row) => row.map((v2) => Math.max(v2, 1e-12)));
+  for (let i = 0; i < m; i++) for (let b = 0; b < k; b++) itemBundle[i][b] *= inc[b][i];
+  const itemBundle1 = new Array(k).fill(0);
+  for (let b = 0; b < k; b++) {
+    let mn = Infinity;
+    for (let i = 0; i < m; i++) { const val = itemBundle[i][b]; if (val > 0) mn = Math.min(mn, val); }
+    itemBundle1[b] = mn === Infinity ? 0 : mn;
+  }
+
+  const alloc = agentBundle.map((row) => row.map((val, b) => val * itemBundle1[b]));
+
+  let hp = tanhVec(linear(model.pay_trunk[0].w, model.pay_trunk[0].b, x_in));
+  hp = tanhVec(linear(model.pay_trunk[1].w, model.pay_trunk[1].b, hp));
+  const payFrac = linear(model.pay_head.w, model.pay_head.b, hp).map((z) => 1 / (1 + Math.exp(-z)));
+
+  const matrixDot = alloc.map((row, a) => row.reduce((s, val, b) => s + val * v[a][b], 0));
+  const pay = payFrac.map((pf, a) => pf * matrixDot[a]);
+
+  // item-space allocation probabilities: itemAlloc[a][i] = sum_b alloc[a][b]*inc[b][i]
+  const itemAlloc = alloc.map((row) =>
+    Array.from({ length: m }, (_, i) => row.reduce((s, val, b) => s + val * inc[b][i], 0))
+  );
+
+  return { alloc, pay, itemAlloc };
+}
+
+/* ======================================================================
+   FORMAT HELPERS
+   ====================================================================== */
+const fmt = (x, d = 3) => (Number.isFinite(x) ? x.toFixed(d) : "—");
+const pct = (x, d = 0) => (Number.isFinite(x) ? x.toFixed(d) + "%" : "—");
+function actorColorVar(i) { return `var(--${["china", "usally", "chinaally"][i]})`; }
+function actorSoftVar(i) { return `var(--${["china", "usally", "chinaally"][i]}-soft)`; }
+
+/* ======================================================================
+   THEME TOGGLE
+   ====================================================================== */
+(function themeInit() {
+  const root = document.documentElement;
+  const btn = document.getElementById("themeToggle");
+  const cycle = ["system", "light", "dark"];
+  let idx = 0;
+  function apply() {
+    const mode = cycle[idx];
+    if (mode === "system") root.removeAttribute("data-theme");
+    else root.setAttribute("data-theme", mode);
+    btn.textContent = "THEME: " + mode.toUpperCase();
+  }
+  btn.addEventListener("click", () => { idx = (idx + 1) % cycle.length; apply(); });
+  apply();
+})();
+
+/* ======================================================================
+   MODE SWITCH
+   ====================================================================== */
+const modeButtons = document.querySelectorAll(".modeswitch button");
+function setMode(mode) {
+  modeButtons.forEach((b) => b.classList.toggle("active", b.dataset.mode === mode));
+  document.querySelectorAll("section.mode").forEach((s) => s.classList.toggle("active", s.id === "mode-" + mode));
+}
+modeButtons.forEach((b) => b.addEventListener("click", () => setMode(b.dataset.mode)));
+document.getElementById("ctaTry").addEventListener("click", () => setMode("mechanism"));
+
+/* ======================================================================
+   ACTOR CARD BUILDER (shared by Design + Mechanism modes)
+   ====================================================================== */
+function buildActorCards(container, state, boundsPerBidder, gammaFree, onChange) {
+  container.innerHTML = "";
+  const roles = ["Strategic competitor", "Aligned with Home", "Aligned with Foreign"];
+  NAMES.forEach((name, i) => {
+    const bounds = boundsPerBidder[i];
+    const card = document.createElement("div");
+    card.className = "actor-card";
+    card.style.setProperty("--actor-c", actorColorVar(i));
+    card.innerHTML = `
+      <div class="actor-head">
+        <span class="actor-name">${name}</span>
+        <span class="actor-role">${roles[i]}</span>
+      </div>
+      <div class="slider-row">
+        <div class="slider-label"><span><b>α</b> — economic value</span><span class="val" data-out="a">${state[i].a.toFixed(2)}</span></div>
+        <input type="range" min="${bounds.a[0]}" max="${bounds.a[1]}" step="0.01" value="${state[i].a}" data-field="a" data-i="${i}" />
+      </div>
+      <div class="slider-row">
+        <div class="slider-label"><span><b>σ</b> — security value</span><span class="val" data-out="s">${state[i].s.toFixed(2)}</span></div>
+        <input type="range" min="${bounds.s[0]}" max="${bounds.s[1]}" step="0.01" value="${state[i].s}" data-field="s" data-i="${i}" />
+      </div>
+      <div class="slider-row">
+        <div class="slider-label"><span><b>γ</b> — complementarity</span><span class="val" data-out="g">${state[i].g.toFixed(2)}</span></div>
+        <input type="range" min="${bounds.g[0]}" max="${bounds.g[1]}" step="0.01" value="${state[i].g}" data-field="g" data-i="${i}" ${gammaFree ? "" : "disabled"} />
+        ${gammaFree ? "" : '<div class="slider-note">γ = −min(α, σ) here — unit demand</div>'}
+      </div>
+    `;
+    container.appendChild(card);
+  });
+  container.querySelectorAll('input[type="range"]').forEach((inp) => {
+    inp.addEventListener("input", () => {
+      const i = +inp.dataset.i, field = inp.dataset.field, val = parseFloat(inp.value);
+      state[i][field] = val;
+      inp.parentElement.querySelector(".val").textContent = val.toFixed(2);
+      onChange();
+    });
+  });
+}
+
+/* ======================================================================
+   LEDGER TABLE RENDERER — shared visual grammar for both modes
+   probs: [ [pEcon, pSec], ... ] per actor, each in [0,1]
+   payments: [pay0, pay1, pay2] or null
+   ====================================================================== */
+function renderLedger(el, probs, payments) {
+  const rows = NAMES.map((name, i) => {
+    const cell = (p) => `
+      <td class="alloc-cell">
+        <div class="alloc-bar-track">
+          <div class="alloc-bar-fill" style="width:${Math.round(p * 100)}%; --fill-c:${actorColorVar(i)}"></div>
+          <div class="alloc-bar-label">${pct(p * 100)}</div>
+        </div>
+      </td>`;
+    const payCell = payments ? `<td class="pay-cell"><b>${fmt(payments[i], 3)}</b></td>` : "";
+    return `<tr>
+      <td><span class="actor-chip" style="color:${actorColorVar(i)}"><span class="chip-dot" style="--dot-c:${actorColorVar(i)}"></span>${name}</span></td>
+      ${cell(probs[i][0])}
+      ${cell(probs[i][1])}
+      ${payCell}
+    </tr>`;
+  }).join("");
+  el.innerHTML = `
+    <table class="ledger-table">
+      <thead><tr><th>Country</th><th>Economic budget</th><th>Security guarantee</th>${payments ? "<th>Pays</th>" : ""}</tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
+/* ======================================================================
+   DESIGN MODE
+   ====================================================================== */
+const designState = EXAMPLE1.map((d) => ({ ...d }));
+let payRule = "first";
+
+function insightForDesign(alpha, sigma, gamma) {
+  const bundle = firstBest(alpha, sigma, gamma, false);
+  // best split: best je, jg with je != jg
+  let bestSplit = -Infinity, splitE = -1, splitG = -1;
+  for (let e = 0; e < 3; e++) for (let g = 0; g < 3; g++) {
+    if (e === g) continue;
+    const r = alpha[e] + sigma[g];
+    if (r > bestSplit) { bestSplit = r; splitE = e; splitG = g; }
+  }
+  const bundles = bundle.je === bundle.jg;
+  if (bundles) {
+    const diff = bundle.revenue - bestSplit;
+    return `<b>${NAMES[bundle.je]}</b> takes both goods — beats the best split by <b>${fmt(diff, 3)}</b>.`;
+  } else {
+    const bestBundleRev = Math.max(...alpha.map((a, i) => a + sigma[i] + gamma[i]));
+    const diff = bundle.revenue - bestBundleRev;
+    return `Splits: budget to <b>${NAMES[bundle.je]}</b>, security to <b>${NAMES[bundle.jg]}</b> — beats the best bundle by <b>${fmt(diff, 3)}</b>.`;
+  }
+}
+
+function recomputeDesign() {
+  const alpha = designState.map((d) => d.a);
+  const sigma = designState.map((d) => d.s);
+  const gamma = designState.map((d) => d.g);
+  const fb = firstBest(alpha, sigma, gamma, true);
+  const vcg = vcgRevenue(alpha, sigma, gamma, true);
+
+  const probs = [0, 1, 2].map((i) => [fb.je === i ? 1 : 0, fb.jg === i ? 1 : 0]);
+  const firstPricePay = [0, 1, 2].map((i) => {
+    let v = 0;
+    if (fb.je === i) v += alpha[i];
+    if (fb.jg === i) v += sigma[i];
+    if (fb.je === i && fb.jg === i) v += gamma[i];
+    return v;
+  });
+  const payments = payRule === "first" ? firstPricePay : vcg.payments;
+  const revenue = payRule === "first" ? fb.revenue : vcg.revenue;
+
+  const results = document.getElementById("designResults");
+  results.innerHTML = `
+    <div class="revenue-row">
+      <div class="stat-tile hi">
+        <div class="stat-label">Revenue (${payRule === "first" ? "first-price" : "VCG"})</div>
+        <div class="stat-value">${fmt(revenue, 3)}</div>
+        <div class="stat-sub">welfare ceiling: ${fmt(fb.revenue, 3)}</div>
+      </div>
+      <div class="stat-tile">
+        <div class="stat-label">VCG revenue</div>
+        <div class="stat-value">${fmt(vcg.revenue, 3)}</div>
+        <div class="stat-sub">truthful, externality-priced</div>
+      </div>
+      <div class="stat-tile">
+        <div class="stat-label">First-best welfare</div>
+        <div class="stat-value">${fmt(fb.revenue, 3)}</div>
+        <div class="stat-sub">complete-information ceiling</div>
+      </div>
+    </div>
+    <div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <span class="stat-label" style="margin:0">Allocation</span>
+        <span class="payrule-toggle">
+          <button data-rule="first" class="${payRule === "first" ? "active" : ""}">First-price</button>
+          <button data-rule="vcg" class="${payRule === "vcg" ? "active" : ""}">VCG</button>
+        </span>
+      </div>
+      <div class="ledger" id="designLedger"></div>
+      <p class="caption">Bars show the winning allocation — always 0% or 100%. "Pays" is the concession under the selected rule.</p>
+    </div>
+    <p class="insight">${insightForDesign(alpha, sigma, gamma)}</p>
+  `;
+  renderLedger(document.getElementById("designLedger"), probs, payments);
+  results.querySelectorAll(".payrule-toggle button").forEach((b) =>
+    b.addEventListener("click", () => { payRule = b.dataset.rule; recomputeDesign(); })
+  );
+}
+
+const DESIGN_BOUNDS = [0, 1, 2].map(() => ({ a: [0, 1], s: [0, 1], g: [-0.5, 1] }));
+buildActorCards(document.getElementById("designActors"), designState, DESIGN_BOUNDS, true, recomputeDesign);
+// reset control
+(function addDesignReset() {
+  const panel = document.getElementById("designActors");
+  const btn = document.createElement("button");
+  btn.className = "reset-link";
+  btn.textContent = "↺ reset to Example 1";
+  btn.style.marginTop = "4px";
+  btn.addEventListener("click", () => {
+    EXAMPLE1.forEach((d, i) => Object.assign(designState[i], d));
+    buildActorCards(document.getElementById("designActors"), designState, DESIGN_BOUNDS, true, recomputeDesign);
+    document.getElementById("designActors").appendChild(btn);
+    recomputeDesign();
+  });
+  panel.appendChild(btn);
+})();
+recomputeDesign();
+
+/* ======================================================================
+   MECHANISM MODE
+   ====================================================================== */
+let currentModel = "complements";
+const BUDGETS = [0.02, 0.005, 0.002, 0.001]; // loose -> tight, same grid for every world
+let currentBudget = 0.005;
+const mechStates = {};
+Object.keys(MODEL_META).forEach((k) => { mechStates[k] = MODEL_META[k].defaults.map((d) => ({ ...d })); });
+
+function buildModelPicker() {
+  const el = document.getElementById("modelPicker");
+  el.innerHTML = "";
+  Object.entries(MODEL_META).forEach(([key, meta]) => {
+    const btn = document.createElement("div");
+    btn.className = "model-btn" + (key === currentModel ? " active" : "");
+    btn.innerHTML = `<div class="mb-name">${meta.label} <span class="mb-sign">${meta.sign}</span></div><div class="mb-desc">${meta.desc}</div>`;
+    btn.addEventListener("click", () => { currentModel = key; buildModelPicker(); rebuildMechActors(); });
+    el.appendChild(btn);
+  });
+}
+function buildBudgetPicker() {
+  const el = document.getElementById("budgetPicker");
+  el.innerHTML = `
+    <div class="budget-picker-label"><span><b>Regret budget</b></span><span class="val">${currentBudget}</span></div>
+    <div class="budget-row">
+      ${BUDGETS.map((b) => `<button class="budget-tab${b === currentBudget ? " active" : ""}" data-b="${b}">${b}</button>`).join("")}
+    </div>
+    <div class="budget-caption">Loose = more revenue, more regret. Tight = closer to truthful. Each tab is a real trained checkpoint.</div>
+  `;
+  el.querySelectorAll(".budget-tab").forEach((btn) =>
+    btn.addEventListener("click", () => { currentBudget = parseFloat(btn.dataset.b); buildBudgetPicker(); recomputeMechanism(); })
+  );
+}
+function rebuildMechActors() {
+  const meta = MODEL_META[currentModel];
+  buildBudgetPicker();
+  buildActorCards(document.getElementById("mechActors"), mechStates[currentModel], meta.bounds, meta.gammaFree, recomputeMechanism);
+  recomputeMechanism();
+}
+
+function insightForMechanism(alpha, sigma, gamma, fb, netAlloc, netPay) {
+  const netEcon = netAlloc.itemAlloc.map((r) => r[1]).reduce((best, v, i, arr) => (v > arr[best] ? i : best), 0);
+  const netSec = netAlloc.itemAlloc.map((r) => r[0]).reduce((best, v, i, arr) => (v > arr[best] ? i : best), 0);
+  const learnedBundles = netEcon === netSec;
+  const fbBundles = fb.je === fb.jg;
+  if (learnedBundles && fbBundles && netEcon === fb.je) {
+    return `Concentrates on <b>${NAMES[netEcon]}</b> — matches the welfare-optimal choice.`;
+  }
+  if (learnedBundles && !fbBundles) {
+    return `Bundles onto <b>${NAMES[netEcon]}</b>, unlike first-best's split (${NAMES[fb.je]} / ${NAMES[fb.jg]}).`;
+  }
+  if (!learnedBundles && fbBundles) {
+    return `Splits (budget→${NAMES[netEcon]}, security→${NAMES[netSec]}) rather than bundling on ${NAMES[fb.je]}.`;
+  }
+  return `Budget to <b>${NAMES[netEcon]}</b>, security to <b>${NAMES[netSec]}</b>.`;
+}
+
+function recomputeMechanism() {
+  const meta = MODEL_META[currentModel];
+  const s = mechStates[currentModel];
+  let alpha = s.map((d) => d.a);
+  let sigma = s.map((d) => d.s);
+  let gamma = meta.gammaFree ? s.map((d) => d.g) : alpha.map((a, i) => -Math.min(a, sigma[i]));
+
+  const model = MODEL_WEIGHTS[currentModel][currentBudget];
+  const x = alpha.map((a, i) => [a, sigma[i]]);
+  const net = netForward(model, x, gamma);
+
+  const withhold = currentModel === "liability";
+  const fb = firstBest(alpha, sigma, gamma, withhold);
+  const vcg = vcgRevenue(alpha, sigma, gamma, withhold);
+  const netRevenue = net.pay.reduce((a, b) => a + b, 0);
+
+  const probs = net.itemAlloc.map((r) => [r[1], r[0]]); // [econ, sec] per actor
+
+  const results = document.getElementById("mechResults");
+  results.innerHTML = `
+    <div class="revenue-row">
+      <div class="stat-tile hi">
+        <div class="stat-label">Learned revenue</div>
+        <div class="stat-value">${fmt(netRevenue, 3)}</div>
+        <div class="stat-sub">${netRevenue > vcg.revenue ? "+" : ""}${fmt(100 * (netRevenue - vcg.revenue) / Math.max(1e-9, vcg.revenue), 1)}% vs. VCG</div>
+      </div>
+      <div class="stat-tile">
+        <div class="stat-label">VCG floor</div>
+        <div class="stat-value">${fmt(vcg.revenue, 3)}</div>
+        <div class="stat-sub">truthful baseline</div>
+      </div>
+      <div class="stat-tile">
+        <div class="stat-label">First-best ceiling</div>
+        <div class="stat-value">${fmt(fb.revenue, 3)}</div>
+        <div class="stat-sub">unattainable under privacy</div>
+      </div>
+    </div>
+    <div>
+      <div class="stat-label">Learned allocation (probabilistic)</div>
+      <div class="ledger" id="mechLedger"></div>
+      <p class="caption">Bar width is the mechanism's own allocation probability, not a hard assignment. Payments are its actual output.</p>
+    </div>
+    <p class="insight">${insightForMechanism(alpha, sigma, gamma, fb, net, net.pay)}</p>
+  `;
+  renderLedger(document.getElementById("mechLedger"), probs, net.pay);
+}
+
+buildModelPicker();
+rebuildMechActors();
+
+/* ======================================================================
+   GEO-GRAPH — GTAP policy-bundle demonstrator
+   Three primitive 10% heavy-manufacturing tariff tools.  Singles and the
+   all-three package are observed GTAP equivalent variations (million USD).
+   The three pair packages are deliberately marked additive interpolations:
+   they are a data-gap diagnostic, not GTAP estimates.  Geo-Graph's actual
+   learned held-out audit is reported below; the live mixture visualizes the
+   differentiable policy layer over these finite packages.
+   ====================================================================== */
+const GEO_COUNTRIES = ["USA", "China", "U.S. ally", "China ally", "Rest of world"];
+const GEO_COLORS = ["var(--accent)", "var(--china)", "var(--usally)", "var(--chinaally)", "var(--ink-muted)"];
+const GEO_SINGLE = {
+  chn: [75.8, -26206, 12800, 1170, 3736],
+  usally: [2121, 17109, -40131, 1356, 8800],
+  chnally: [36.2, 461, 1358, -1323, -729],
+};
+const GEO_ALL = [12392, -13858, -27675, 937, 13433];
+const GEO_PACKAGES = [
+  { id:"none", name:"Status quo", tools:[], value:[0,0,0,0,0], observed:true },
+  { id:"chn", name:"China", tools:["China"], value:GEO_SINGLE.chn, observed:true },
+  { id:"usally", name:"U.S. ally", tools:["U.S. ally"], value:GEO_SINGLE.usally, observed:true },
+  { id:"chnally", name:"China ally", tools:["China ally"], value:GEO_SINGLE.chnally, observed:true },
+  { id:"chn-usally", name:"China + U.S. ally", tools:["China","U.S. ally"], value:GEO_SINGLE.chn.map((x,i)=>x+GEO_SINGLE.usally[i]), observed:false },
+  { id:"chn-chnally", name:"China + China ally", tools:["China","China ally"], value:GEO_SINGLE.chn.map((x,i)=>x+GEO_SINGLE.chnally[i]), observed:false },
+  { id:"usally-chnally", name:"U.S. ally + China ally", tools:["U.S. ally","China ally"], value:GEO_SINGLE.usally.map((x,i)=>x+GEO_SINGLE.chnally[i]), observed:false },
+  { id:"all", name:"All three", tools:["China","U.S. ally","China ally"], value:GEO_ALL, observed:true },
+];
+const GEO_OBJECTIVES = {
+  global: { label:"Global EV", weights:[1,1,1,1,1], desc:"sum of country equivalent variations" },
+  usa: { label:"U.S. EV", weights:[1,0,0,0,0], desc:"U.S. domestic welfare only" },
+  bloc: { label:"U.S. + ally", weights:[1,0,1,0,0], desc:"U.S. and U.S.-ally equivalent variation" },
+  security: { label:"Weighted coalition", weights:[1,-0.15,0.8,-0.1,0.15], desc:"illustrative signed geopolitical weights" },
+};
+let geoObjective = "global", geoPairs = true, geoTemp = 0.35;
+const geoScore = (p) => p.value.reduce((s,x,i) => s + x * GEO_OBJECTIVES[geoObjective].weights[i], 0);
+const geoFmt = (x) => `${x < 0 ? "−" : "+"}$${Math.abs(x).toLocaleString(undefined,{maximumFractionDigits:0})}m`;
+function geoAllowed() { return GEO_PACKAGES.filter((p) => geoPairs || p.observed); }
+function geoSoftmax(scores, temp) {
+  const scale = 10000 * temp, mx = Math.max(...scores); const ex = scores.map(x=>Math.exp((x-mx)/scale)); const z=ex.reduce((a,b)=>a+b,0); return ex.map(x=>x/z);
+}
+function buildGeoControls() {
+  const el = document.getElementById("geoControls");
+  el.innerHTML = `
+    <div><div class="geo-control-label">Designer objective</div><div class="geo-options">${Object.entries(GEO_OBJECTIVES).map(([id,o])=>`<button class="geo-option ${id===geoObjective?"active":""}" data-objective="${id}">${o.label}</button>`).join("")}</div><div class="caption">${GEO_OBJECTIVES[geoObjective].desc}</div></div>
+    <div><div class="geo-control-label">Unobserved pair bundles</div><div class="geo-options"><button class="geo-option ${geoPairs?"active":""}" data-pairs="yes">Include additive interpolation</button><button class="geo-option ${!geoPairs?"active":""}" data-pairs="no">Observed GTAP packages only</button></div><div class="caption">Pairs were not run in GTAP. Their values equal the sum of singleton EVs when enabled.</div></div>
+    <div><div class="geo-control-label">Geo-Graph mixture temperature <span class="tabular">${geoTemp.toFixed(2)}</span></div><input id="geoTemp" type="range" min="0.08" max="1" step="0.01" value="${geoTemp}" /><div class="caption">Lower temperature approaches the exact selected package; higher temperature shows a fractional policy mixture.</div></div>
+    <div class="geo-warning"><b>Interpretation:</b> this panel demonstrates signed, nonseparable policy effects and data gaps. It does not assert that an additive pair value, a weighted geopolitical objective, or a fractional tariff package is a structural GTAP counterfactual.</div>`;
+  el.querySelectorAll("[data-objective]").forEach(b=>b.addEventListener("click",()=>{geoObjective=b.dataset.objective; buildGeoControls(); renderGeo();}));
+  el.querySelectorAll("[data-pairs]").forEach(b=>b.addEventListener("click",()=>{geoPairs=b.dataset.pairs==="yes"; buildGeoControls(); renderGeo();}));
+  el.querySelector("#geoTemp").addEventListener("input",e=>{geoTemp=+e.target.value; renderGeo();});
+}
+function renderGeo() {
+  const ps=geoAllowed(), scores=ps.map(geoScore), max=Math.max(...scores), best=ps[scores.indexOf(max)];
+  const prob=geoSoftmax(scores,geoTemp);
+  const mix=GEO_COUNTRIES.map((_,i)=>prob.reduce((s,q,k)=>s+q*ps[k].value[i],0));
+  const total=best.value.reduce((a,b)=>a+b,0), compensate=best.value.reduce((s,x)=>s+Math.max(0,-x),0);
+  const allResidual=GEO_ALL.map((x,i)=>x-GEO_SINGLE.chn[i]-GEO_SINGLE.usally[i]-GEO_SINGLE.chnally[i]);
+  const pCards=ps.map((p,i)=>`<div class="geo-package ${p.id===best.id?"selected":""}"><div class="geo-package-name">${p.name}</div><div class="geo-package-sub">${p.observed?"GTAP observed":"pair: additive assumption"}</div><div class="geo-package-sub">score ${geoFmt(scores[i])} · mix ${(100*prob[i]).toFixed(1)}%</div></div>`).join("");
+  const rows=GEO_COUNTRIES.map((n,i)=>`<tr><td><span class="actor-chip" style="color:${GEO_COLORS[i]}"><span class="chip-dot" style="--dot-c:${GEO_COLORS[i]}"></span>${n}</span></td><td class="pay-cell"><span class="signed ${best.value[i]<0?"neg":"pos"}">${geoFmt(best.value[i])}</span></td><td class="pay-cell"><span class="signed ${mix[i]<0?"neg":"pos"}">${geoFmt(mix[i])}</span></td><td class="pay-cell"><span class="signed ${allResidual[i]<0?"neg":"pos"}">${geoFmt(allResidual[i])}</span></td></tr>`).join("");
+  document.getElementById("geoResults").innerHTML=`
+    <div class="revenue-row"><div class="stat-tile hi"><div class="stat-label">Exact selected package</div><div class="stat-value" style="font-size:21px">${best.name}</div><div class="stat-sub">${best.observed?"GTAP observed package":"depends on additive pair assumption"}</div></div><div class="stat-tile"><div class="stat-label">Objective score</div><div class="stat-value">${geoFmt(max)}</div><div class="stat-sub">${GEO_OBJECTIVES[geoObjective].label}</div></div><div class="stat-tile"><div class="stat-label">Geo-Graph audit</div><div class="stat-value">99.41%</div><div class="stat-sub">exact-package agreement on synthetic sensitivity draws</div></div></div>
+    <div><div class="stat-label">Policy package space</div><div class="geo-packages">${pCards}</div><p class="caption">The selected package is exact enumeration over this finite display set. The mixture is the continuous differentiable-policy visualization.</p></div>
+    <div class="ledger"><table class="ledger-table"><thead><tr><th>Country</th><th>Selected EV</th><th>Mixture EV</th><th>All-three synergy</th></tr></thead><tbody>${rows}</tbody></table><p class="caption">EV = equivalent variation, million USD. All-three synergy = observed all-three EV minus the three singleton EVs; it is a direct non-additivity diagnostic.</p></div>
+    <div class="revenue-row"><div class="stat-tile"><div class="stat-label">Global EV, selected</div><div class="stat-value">${geoFmt(total)}</div><div class="stat-sub">transfers do not change this total</div></div><div class="stat-tile"><div class="stat-label">Minimum IR compensation</div><div class="stat-value">$${compensate.toLocaleString(undefined,{maximumFractionDigits:0})}m</div><div class="stat-sub">to bring negative-EV countries to zero</div></div><div class="stat-tile"><div class="stat-label">Missing GTAP runs</div><div class="stat-value">3</div><div class="stat-sub">the pair packages are the priority data request</div></div></div>
+    <p class="insight">${best.id==="none"?"Under <b>global welfare</b>, every observed tariff package has negative aggregate EV, so the full-information planner retains <b>status quo</b>.":`Under <b>${GEO_OBJECTIVES[geoObjective].label}</b>, the selected package is <b>${best.name}</b>. Its signed effects make participation and compensation a first-class mechanism constraint, not an afterthought.`}</p>`;
+}
+buildGeoControls(); renderGeo();
+
+/* ======================================================================
+   FIELD NOTES — charts + summary table
+   ====================================================================== */
+function drawFrontierChart() {
+  const canvas = document.getElementById("frontierChart");
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+  const dpr = window.devicePixelRatio || 1;
+  const W = canvas.clientWidth || 640, H = canvas.clientHeight || 360;
+  canvas.width = W * dpr; canvas.height = H * dpr; ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, W, H);
+
+  const styles = getComputedStyle(document.documentElement);
+  const ink = styles.getPropertyValue("--ink").trim();
+  const inkMuted = styles.getPropertyValue("--ink-muted").trim();
+  const accent = styles.getPropertyValue("--accent").trim();
+  const line = styles.getPropertyValue("--line-strong").trim();
+
+  const pad = { l: 54, r: 20, t: 18, b: 40 };
+  const plotW = W - pad.l - pad.r, plotH = H - pad.t - pad.b;
+  const { band, points } = SYMMETRIC_FRONTIER;
+  const xMax = Math.max(...points.map((p) => p.regret)) * 1.08;
+  const yMin = band.vcg - 0.03, yMax = band.firstBest + 0.03;
+  const X = (r) => pad.l + (r / xMax) * plotW;
+  const Y = (v) => pad.t + plotH - ((v - yMin) / (yMax - yMin)) * plotH;
+
+  // band
+  ctx.fillStyle = line;
+  ctx.globalAlpha = 0.5;
+  ctx.fillRect(pad.l, Y(band.firstBest), plotW, Y(band.vcg) - Y(band.firstBest));
+  ctx.globalAlpha = 1;
+
+  // band lines
+  ctx.strokeStyle = inkMuted; ctx.setLineDash([3, 3]); ctx.lineWidth = 1;
+  [band.vcg, band.firstBest].forEach((v) => {
+    ctx.beginPath(); ctx.moveTo(pad.l, Y(v)); ctx.lineTo(pad.l + plotW, Y(v)); ctx.stroke();
+  });
+  ctx.setLineDash([]);
+  ctx.fillStyle = inkMuted; ctx.font = "10.5px " + styles.getPropertyValue("--mono").trim();
+  ctx.textAlign = "left";
+  ctx.fillText("first-best " + band.firstBest.toFixed(3), pad.l + 4, Y(band.firstBest) - 5);
+  ctx.fillText("VCG " + band.vcg.toFixed(3), pad.l + 4, Y(band.vcg) + 13);
+
+  // axes
+  ctx.strokeStyle = line; ctx.beginPath();
+  ctx.moveTo(pad.l, pad.t); ctx.lineTo(pad.l, pad.t + plotH); ctx.lineTo(pad.l + plotW, pad.t + plotH); ctx.stroke();
+  ctx.fillStyle = inkMuted; ctx.font = "10px " + styles.getPropertyValue("--mono").trim();
+  ctx.textAlign = "center";
+  ctx.fillText("regret →", pad.l + plotW / 2, H - 6);
+  ctx.save(); ctx.translate(14, pad.t + plotH / 2); ctx.rotate(-Math.PI / 2);
+  ctx.fillText("revenue", 0, 0); ctx.restore();
+
+  // sorted points, line + dots
+  const sorted = [...points].sort((a, b) => a.regret - b.regret);
+  ctx.strokeStyle = accent; ctx.lineWidth = 2; ctx.beginPath();
+  sorted.forEach((p, i) => { const x = X(p.regret), y = Y(p.revenue); i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); });
+  ctx.stroke();
+  sorted.forEach((p) => {
+    ctx.beginPath(); ctx.arc(X(p.regret), Y(p.revenue), 3.6, 0, 7);
+    ctx.fillStyle = accent; ctx.fill();
+  });
+}
+
+const WORLD_COLORS = { substitutes: "usally", complements: "china", liability: "chinaally" };
+function drawBundlingChart() {
+  const canvas = document.getElementById("bundlingChart");
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+  const dpr = window.devicePixelRatio || 1;
+  const W = canvas.clientWidth || 560, H = canvas.clientHeight || 320;
+  canvas.width = W * dpr; canvas.height = H * dpr; ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, W, H);
+
+  const styles = getComputedStyle(document.documentElement);
+  const inkMuted = styles.getPropertyValue("--ink-muted").trim();
+  const line = styles.getPropertyValue("--line").trim();
+  const mono = styles.getPropertyValue("--mono").trim();
+
+  const worlds = Object.keys(WORLD_SUMMARY);
+  const pad = { l: 110, r: 60, t: 16, b: 16 };
+  const rowH = (H - pad.t - pad.b) / worlds.length;
+  const plotW = W - pad.l - pad.r;
+
+  worlds.forEach((w, idx) => {
+    const rows = WORLD_SUMMARY[w].rows;
+    const avgBundle = rows.reduce((s, r) => s + r.bundling, 0) / rows.length;
+    const y = pad.t + idx * rowH + rowH / 2;
+    const barH = rowH * 0.42;
+    const color = styles.getPropertyValue("--" + WORLD_COLORS[w]).trim();
+
+    ctx.fillStyle = line;
+    ctx.fillRect(pad.l, y - barH / 2, plotW, barH);
+    ctx.fillStyle = color;
+    ctx.fillRect(pad.l, y - barH / 2, (avgBundle / 100) * plotW, barH);
+
+    ctx.fillStyle = styles.getPropertyValue("--ink").trim();
+    ctx.font = "12px " + styles.getPropertyValue("--sans").trim();
+    ctx.textAlign = "right";
+    ctx.fillText(WORLD_SUMMARY[w].label, pad.l - 12, y + 4);
+
+    ctx.textAlign = "left"; ctx.font = "11px " + mono;
+    ctx.fillStyle = inkMuted;
+    ctx.fillText(avgBundle.toFixed(0) + "%", pad.l + plotW + 8, y + 4);
+  });
+}
+
+function buildSummaryTable() {
+  const el = document.getElementById("summaryTable");
+  const rows = [];
+  Object.entries(WORLD_SUMMARY).forEach(([key, w]) => {
+    w.rows.forEach((r, i) => {
+      rows.push(`<tr>
+        <td>${i === 0 ? w.label : ""}</td>
+        <td class="num">${r.budget}</td>
+        <td class="num">${r.revenue.toFixed(3)}</td>
+        <td class="num">${r.regret.toFixed(5)}</td>
+        <td class="num">${r.bundling.toFixed(0)}%</td>
+        <td class="num">${r.usAllyShare != null ? r.usAllyShare.toFixed(0) + "%" : "—"}</td>
+      </tr>`);
+    });
+  });
+  el.innerHTML = `
+    <thead><tr><th>World</th><th>Budget</th><th>Revenue</th><th>Regret</th><th>Bundling</th><th>Home Ally share</th></tr></thead>
+    <tbody>${rows.join("")}</tbody>`;
+}
+
+buildSummaryTable();
+function redrawCharts() { drawFrontierChart(); drawBundlingChart(); }
+redrawCharts();
+window.addEventListener("resize", redrawCharts);
+new MutationObserver(redrawCharts).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+if (window.matchMedia) window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", redrawCharts);
+</script>
