@@ -1,0 +1,208 @@
+{
+  "status": "first_gtap_calibrated_policy_selector_not_mechanism_evidence",
+  "source": "/scratch/maip/nascent/modv1 results-Sheet1.csv",
+  "seed": 20260922,
+  "unit": "million USD EV",
+  "countries": [
+    "USA",
+    "CHN",
+    "USALLY",
+    "CHNALLY",
+    "ROW"
+  ],
+  "primitive_items": [
+    "tariff_10pct_imports_from_CHN",
+    "tariff_10pct_imports_from_USALLY",
+    "tariff_10pct_imports_from_CHNALLY"
+  ],
+  "bundle_names": [
+    "status_quo",
+    "CHN",
+    "USALLY",
+    "CHN+USALLY",
+    "CHNALLY",
+    "CHN+CHNALLY",
+    "USALLY+CHNALLY",
+    "ALL_three"
+  ],
+  "observed_bundle_mask": [
+    true,
+    true,
+    true,
+    false,
+    true,
+    false,
+    false,
+    true
+  ],
+  "trained_on_observed_bundles_only": true,
+  "pair_bundle_assumption": "additive interpolation; no GTAP pair runs supplied",
+  "training_sensitivity_draws_are_not_gtap_observations": true,
+  "relative_noise": 0.1,
+  "base_results": [
+    {
+      "objective": "global_welfare",
+      "observed_only_choice": "status_quo",
+      "observed_only_value": 0.0,
+      "completed_exact_choice": "status_quo",
+      "completed_exact_value": 0.0,
+      "cagraph_choice": "status_quo",
+      "cagraph_probability": 0.893083393573761,
+      "cagraph_chosen_value": 0.0,
+      "cagraph_expected_value": -21.04119110107422,
+      "country_ev_at_completed_exact_choice": {
+        "USA": 0.0,
+        "CHN": 0.0,
+        "USALLY": 0.0,
+        "CHNALLY": 0.0,
+        "ROW": 0.0
+      },
+      "minimum_zero_outside_compensation": 0.0
+    },
+    {
+      "objective": "usa_ev",
+      "observed_only_choice": "ALL_three",
+      "observed_only_value": 12392.0,
+      "completed_exact_choice": "ALL_three",
+      "completed_exact_value": 12392.0,
+      "cagraph_choice": "ALL_three",
+      "cagraph_probability": 1.0,
+      "cagraph_chosen_value": 12392.0,
+      "cagraph_expected_value": 12392.0,
+      "country_ev_at_completed_exact_choice": {
+        "USA": 12392.0,
+        "CHN": -13858.0,
+        "USALLY": -27675.0,
+        "CHNALLY": 937.0,
+        "ROW": 13433.0
+      },
+      "minimum_zero_outside_compensation": 41533.0
+    },
+    {
+      "objective": "usa_usally_ev",
+      "observed_only_choice": "CHN",
+      "observed_only_value": 12875.7998046875,
+      "completed_exact_choice": "CHN",
+      "completed_exact_value": 12875.7998046875,
+      "cagraph_choice": "CHN",
+      "cagraph_probability": 1.0,
+      "cagraph_chosen_value": 12875.7998046875,
+      "cagraph_expected_value": 12875.7998046875,
+      "country_ev_at_completed_exact_choice": {
+        "USA": 75.8,
+        "CHN": -26206.0,
+        "USALLY": 12800.0,
+        "CHNALLY": 1170.0,
+        "ROW": 3736.0
+      },
+      "minimum_zero_outside_compensation": 26206.0
+    }
+  ],
+  "audit": {
+    "profiles": 4096,
+    "exact_package_agreement": 0.9951171875,
+    "mean_chosen_optimality_gap_million": 0.03728164732456207,
+    "p95_chosen_optimality_gap_million": 0.0,
+    "maximum_chosen_optimality_gap_million": 15.3258056640625,
+    "mean_lottery_expected_gap_million": 4.3876495361328125,
+    "mean_probability_on_exact_package": 0.9584468603134155
+  },
+  "history": [
+    {
+      "step": 1,
+      "expected_objective": 8166.73828125,
+      "exact_agreement": 1.0,
+      "chosen_optimality_gap": 0.0
+    },
+    {
+      "step": 100,
+      "expected_objective": 8335.0048828125,
+      "exact_agreement": 1.0,
+      "chosen_optimality_gap": 0.0
+    },
+    {
+      "step": 200,
+      "expected_objective": 8447.984375,
+      "exact_agreement": 0.98828125,
+      "chosen_optimality_gap": 0.18126368522644043
+    },
+    {
+      "step": 300,
+      "expected_objective": 8756.080078125,
+      "exact_agreement": 0.99609375,
+      "chosen_optimality_gap": 0.07805562019348145
+    },
+    {
+      "step": 400,
+      "expected_objective": 7803.66162109375,
+      "exact_agreement": 0.99609375,
+      "chosen_optimality_gap": 0.014626026153564453
+    },
+    {
+      "step": 500,
+      "expected_objective": 8233.095703125,
+      "exact_agreement": 1.0,
+      "chosen_optimality_gap": 0.0
+    },
+    {
+      "step": 600,
+      "expected_objective": 8454.001953125,
+      "exact_agreement": 0.9921875,
+      "chosen_optimality_gap": 0.028159141540527344
+    },
+    {
+      "step": 700,
+      "expected_objective": 8783.34765625,
+      "exact_agreement": 0.99609375,
+      "chosen_optimality_gap": 0.03501582145690918
+    },
+    {
+      "step": 800,
+      "expected_objective": 8411.181640625,
+      "exact_agreement": 0.9921875,
+      "chosen_optimality_gap": 0.08223342895507812
+    },
+    {
+      "step": 900,
+      "expected_objective": 8301.9951171875,
+      "exact_agreement": 0.99609375,
+      "chosen_optimality_gap": 0.07454061508178711
+    },
+    {
+      "step": 1000,
+      "expected_objective": 7674.728515625,
+      "exact_agreement": 0.99609375,
+      "chosen_optimality_gap": 0.01739788055419922
+    },
+    {
+      "step": 1100,
+      "expected_objective": 7919.611328125,
+      "exact_agreement": 0.984375,
+      "chosen_optimality_gap": 0.18308615684509277
+    },
+    {
+      "step": 1200,
+      "expected_objective": 7851.888671875,
+      "exact_agreement": 1.0,
+      "chosen_optimality_gap": 0.0
+    },
+    {
+      "step": 1300,
+      "expected_objective": 8207.8427734375,
+      "exact_agreement": 0.9921875,
+      "chosen_optimality_gap": 0.07567262649536133
+    },
+    {
+      "step": 1400,
+      "expected_objective": 8386.818359375,
+      "exact_agreement": 0.9921875,
+      "chosen_optimality_gap": 0.009673357009887695
+    },
+    {
+      "step": 1500,
+      "expected_objective": 8451.0439453125,
+      "exact_agreement": 1.0,
+      "chosen_optimality_gap": 0.0
+    }
+  ]
+}
