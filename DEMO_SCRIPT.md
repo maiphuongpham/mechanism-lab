@@ -1,48 +1,40 @@
-# Geoeconomic Mechanism Lab — 75–90 second demo
+# Geoeconomic Mechanism Lab — 60–90 second demo
 
-## 0:00–0:15 — Allocation under uncertainty
+## 0:00–0:20 — What changed
 
-Open **Geo-Graph → Allocation + uncertainty**. Move **Other-country values**.
+Open **Geo-Graph**.
 
-> We now replace the stylized positive values with signed GTAP outcomes. One
-> objective-conditioned Geo-Graph selects among the five observed tariff
-> packages while accounting for effects on every region. The browser uses
-> cached offline inference; across 4,096 sensitivity profiles it matches exact
-> enumeration 99.51% of the time.
+> Last month, CANet used a stylized positive-value auction. This month we feed
+> signed country-level welfare effects from GTAP directly into a CAGraph-style
+> policy selector. The alternatives are the status quo, three observed tariff
+> shocks, and the observed joint shock.
 
-## 0:15–1:05 — Pricing, participation, and truthfulness
+## 0:20–0:55 — Show the learned selector
 
-Open **Pricing + incentives**. Keep the sliders at 100% initially.
+Move one or two valuation sliders and switch between **Global**, **U.S.**, and
+**U.S. + Ally**.
 
-> We treat the U.S. ally as the voluntary negotiating participant. China,
-> China-aligned economies, and the rest of the world remain affected external
-> parties, so their losses are displayed but are not protected by IR.
+> We train one objective-conditioned network on correlated 10 percent Gaussian
+> perturbations around the GTAP table. The bars are probabilities over policy
+> packages—not fractional tariff rates. The screen compares CAGraph with exact
+> enumeration of the same five observed packages.
 
-Point to **Ally concession**, **Participation IR**, and **DSIC benchmark**.
+Point to the two choices and the gap.
 
-> The exact affine-VCG control selects the China-targeted tariff and prices the
-> ally's concession at 12.3 billion dollars in EV-equivalent units. Participation
-> IR compares joining with the tariff policy the U.S. would choose if the ally
-> opted out—not with an artificial zero payoff. Truthful participation passes,
-> and the private-value, quasilinear benchmark is exactly DSIC.
+> On 4,096 held-out profiles, CAGraph selects the exact package 99.51 percent of
+> the time. Its mean hard-decision optimality gap is 0.04 million dollars, with
+> a worst observed gap of 15.33 million.
 
-Move **Ally report** away from 100%.
+## 0:55–1:15 — Interpretation
 
-> A false report cannot improve the ally's true utility; the displayed
-> misreport gain is nonpositive. This truthfulness statement belongs to the
-> exact benchmark. The learned Geo-Graph payment mechanism will instead require
-> an ex-post regret constraint and audit.
+Point to the country outcome table.
 
-## 1:05–1:20 — Close
+> This shows why signed, cross-country values matter: one package can benefit
+> the designer while imposing losses elsewhere. It is a policy-selection
+> result, not yet an incentive-compatible mechanism. Pricing, strategic reports,
+> IR, dynamics, and richer GTAP counterfactuals are the next layer.
 
-Point to **External-region EV**.
+## If limited to one minute
 
-> The mechanism is individually rational for the voluntary ally, but it still
-> imposes about 21.3 billion dollars of losses on external regions. That is the
-> central geoeconomic distinction: strategic participation and geopolitical
-> externalities must be modeled separately.
-
-## If limited to exactly one minute
-
-Skip the first tab. Show only **Pricing + incentives**, the concession, IR,
-DSIC, one report-slider movement, and external-region EV.
+Use the first two paragraphs, move one slider, cite **99.51% agreement** and the
+**$0.04m mean gap**, then end with the final sentence.
