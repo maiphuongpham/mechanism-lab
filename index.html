@@ -1012,20 +1012,39 @@ const GEO_OBJECTIVES = {
   bloc: { label:"U.S. + Ally", weights:[1,0,1,0,0] },
 };
 const geoFmt = (x) => `${x < 0 ? "−" : "+"}$${Math.abs(x).toLocaleString(undefined,{maximumFractionDigits:0})}m`;
-let geoLookup=null, geoLearningObjective="global", geoLearningMultipliers=[1,1,1];
+let geoLookup=null, geoLearningObjective="global", geoLearningMultipliers=[1,1,1,1];
 const GEO_LOOKUP_TO_ID={status_quo:"none",CHN:"chn",USALLY:"usally",CHNALLY:"chnally",ALL_three:"all"};
 function geoDisplayName(name) {
   const p=GEO_PACKAGES.find(x=>x.id===GEO_LOOKUP_TO_ID[name]); return p?p.name:name;
 }
 function buildGeoLearningControls() {
-  const labels=["U.S. values","U.S. ally values","Other-country values"];
+  const labels=["China","U.S. ally","China ally","Rest of world"];
   document.getElementById("geoLearningControls").innerHTML=`
     <div><div class="geo-control-label">Designer objective</div><div class="geo-options">${Object.entries(GEO_OBJECTIVES).map(([id,o])=>`<button class="geo-option ${id===geoLearningObjective?"active":""}" data-learning-objective="${id}">${o.label}</button>`).join("")}</div></div>
-    <div>${labels.map((label,i)=>`<div class="slider-row"><div class="slider-label"><span><b>${label}</b></span><span class="val" data-learning-output="${i}">${Math.round(geoLearningMultipliers[i]*100)}%</span></div><input type="range" min="0.8" max="1.2" step="0.05" value="${geoLearningMultipliers[i]}" data-learning-slider="${i}" /></div>`).join("")}</div>
+    <div><div class="geo-control-label">Country package reports</div>${labels.map((label,i)=>`<div class="slider-row"><div class="slider-label"><span><b>${label}</b></span><span class="val" data-learning-output="${i}">${Math.round(geoLearningMultipliers[i]*100)}%</span></div><input type="range" min="0.8" max="1.2" step="0.1" value="${geoLearningMultipliers[i]}" data-learning-slider="${i}" /></div>`).join("")}</div>
+    <p class="caption">100% = that country's GTAP row. Each control scales its complete five-package report.</p>
     <button type="button" class="reset-link" id="geoLearningReset">↺ reset</button>`;
   document.querySelectorAll("[data-learning-objective]").forEach(b=>b.addEventListener("click",()=>{geoLearningObjective=b.dataset.learningObjective;buildGeoLearningControls();renderGeoLearning();}));
   document.querySelectorAll("[data-learning-slider]").forEach(input=>input.addEventListener("input",()=>{const i=+input.dataset.learningSlider;geoLearningMultipliers[i]=+input.value;document.querySelector(`[data-learning-output="${i}"]`).textContent=`${Math.round(+input.value*100)}%`;renderGeoLearning();}));
-  document.getElementById("geoLearningReset").addEventListener("click",()=>{geoLearningMultipliers=[1,1,1];buildGeoLearningControls();renderGeoLearning();});
+  document.getElementById("geoLearningReset").addEventListener("click",()=>{geoLearningMultipliers=[1,1,1,1];buildGeoLearningControls();renderGeoLearning();});
+}
+function geoArgmax(values){return values.reduce((best,value,index,array)=>value>array[best]?index:best,0);}
+function geoReportedValues(){
+  const countryScale=[1,geoLearningMultipliers[0],geoLearningMultipliers[1],geoLearningMultipliers[2],geoLearningMultipliers[3]];
+  return GEO_PACKAGES.map(p=>p.value.map((value,i)=>value*countryScale[i]));
+}
+function geoVCGBenchmark(packageValues, weights){
+  const participants=[1,2,3,4].filter(i=>weights[i]!==0);
+  const scores=packageValues.map(row=>row.reduce((sum,value,i)=>sum+weights[i]*value,0));
+  const choice=geoArgmax(scores);
+  const payments=new Array(5).fill(null);
+  const outsideChoice=new Array(5).fill(null);
+  participants.forEach(i=>{
+    const without=packageValues.map(row=>row.reduce((sum,value,j)=>sum+(j===i?0:weights[j]*value),0));
+    outsideChoice[i]=geoArgmax(without);
+    payments[i]=without[outsideChoice[i]]-without[choice];
+  });
+  return {choice,payments,outsideChoice,welfare:scores[choice],totalPayment:payments.reduce((s,p)=>s+(p??0),0)};
 }
 function renderGeoLearning() {
   const el=document.getElementById("geoLearningResults");
@@ -1033,14 +1052,24 @@ function renderGeoLearning() {
   const key=geoLearningMultipliers.map(x=>Math.round(x*100)).join("_");
   const record=geoLookup.objectives[geoLearningObjective][key];
   const chosen=GEO_PACKAGES.find(p=>p.id===GEO_LOOKUP_TO_ID[record.choice]);
-  const scaled=chosen.value.map((value,i)=>value*(i===0?geoLearningMultipliers[0]:(i===2?geoLearningMultipliers[1]:geoLearningMultipliers[2])));
-  const outcomeRows=GEO_COUNTRIES.map((name,i)=>`<tr><td><span class="actor-chip" style="color:${GEO_COLORS[i]}"><span class="chip-dot" style="--dot-c:${GEO_COLORS[i]}"></span>${name}</span></td><td class="pay-cell"><span class="signed ${scaled[i]<0?"neg":"pos"}">${geoFmt(scaled[i])}</span></td></tr>`).join("");
+  const packageValues=geoReportedValues();
+  const weights=GEO_OBJECTIVES[geoLearningObjective].weights;
+  const vcg=geoVCGBenchmark(packageValues,weights);
+  const exactPackage=GEO_PACKAGES[vcg.choice];
+  const chosenIndex=GEO_PACKAGES.findIndex(p=>p.id===chosen.id);
+  const learnedWelfare=packageValues[chosenIndex].reduce((s,v,i)=>s+weights[i]*v,0);
+  const participantRows=GEO_COUNTRIES.map((name,i)=>{
+    const report=packageValues[vcg.choice][i];
+    const payment=vcg.payments[i];
+    const pays=payment===null?"—":geoFmt(payment);
+    return `<tr><td><span class="actor-chip" style="color:${GEO_COLORS[i]}"><span class="chip-dot" style="--dot-c:${GEO_COLORS[i]}"></span>${name}</span></td><td class="pay-cell"><span class="signed ${report<0?"neg":"pos"}">${geoFmt(report)}</span></td><td class="pay-cell">${pays}</td></tr>`;
+  }).join("");
   const probabilityRows=geoLookup.observed_package_names.map((name,i)=>`<tr><td>${geoDisplayName(name)}</td><td class="alloc-cell"><div class="alloc-bar-track"><div class="alloc-bar-fill" style="width:${(record.probabilities[i]*100).toFixed(1)}%;--fill-c:var(--accent)"></div><div class="alloc-bar-label">${(record.probabilities[i]*100).toFixed(1)}%</div></div></td></tr>`).join("");
   el.innerHTML=`
-    <div class="revenue-row"><div class="stat-tile hi"><div class="stat-label">Geo-Graph</div><div class="stat-value" style="font-size:20px">${geoDisplayName(record.choice)}</div><div class="stat-sub">${(record.probability*100).toFixed(1)}% probability</div></div><div class="stat-tile"><div class="stat-label">Exact planner</div><div class="stat-value" style="font-size:20px">${geoDisplayName(record.exact)}</div><div class="stat-sub">gap $${record.gap.toFixed(2)}m</div></div></div>
+    <div class="revenue-row"><div class="stat-tile hi"><div class="stat-label">CAGraph welfare</div><div class="stat-value">${geoFmt(learnedWelfare)}</div><div class="stat-sub">${chosen.name} · ${(record.probability*100).toFixed(1)}%</div></div><div class="stat-tile"><div class="stat-label">VCG benchmark</div><div class="stat-value">${geoFmt(vcg.totalPayment)}</div><div class="stat-sub">total pays · ${exactPackage.name}</div></div><div class="stat-tile"><div class="stat-label">Welfare upper bound</div><div class="stat-value">${geoFmt(vcg.welfare)}</div><div class="stat-sub">exact over five packages</div></div></div>
     <div class="ledger"><table class="ledger-table"><thead><tr><th>Policy bundle</th><th>CAGraph probability</th></tr></thead><tbody>${probabilityRows}</tbody></table></div>
-    <div class="ledger"><table class="ledger-table"><thead><tr><th>Country</th><th>${geoDisplayName(record.choice)} outcome</th></tr></thead><tbody>${outcomeRows}</tbody></table></div>
-    <p class="caption">Cached inference · 4,096 held-out profiles · 99.51% exact-package agreement · 10% correlated Gaussian perturbations.</p>`;
+    <div class="ledger"><table class="ledger-table"><thead><tr><th>Country</th><th>Report at ${exactPackage.name}</th><th>Pays (VCG)</th></tr></thead><tbody>${participantRows}</tbody></table></div>
+    <p class="caption">VCG pays belong to the exact truthful benchmark, not the learned CAGraph. USA is the designer; “—” means the country is outside the selected objective.</p>`;
 }
 fetch("results/observed_only/browser_lookup.json")
   .then(response=>response.ok?response:fetch("../cge_gvc/gtap_policy/results/observed_only/browser_lookup.json"))
