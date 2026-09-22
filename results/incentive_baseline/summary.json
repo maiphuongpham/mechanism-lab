@@ -1,0 +1,81 @@
+{
+  "status": "exact_affine_vcg_private_value_benchmark",
+  "designer": "USA",
+  "voluntary_participants": [
+    "USALLY"
+  ],
+  "external_affected_regions": [
+    "CHN",
+    "CHNALLY",
+    "ROW"
+  ],
+  "payment_interpretation": "positive is an EV-equivalent concession to USA; negative is compensation",
+  "outside_option": "USALLY utility under the USA-only policy selected when USALLY opts out",
+  "dsic_scope": "exact for private package values and quasilinear EV-equivalent transfers",
+  "profiles": 4096,
+  "relative_noise": 0.1,
+  "choice_frequency": {
+    "status_quo": 0.0,
+    "CHN": 1.0,
+    "USALLY": 0.0,
+    "CHNALLY": 0.0,
+    "ALL_three": 0.0
+  },
+  "payment_million": {
+    "mean": 12348.533203125,
+    "p05": 10645.900390625,
+    "p50": 12359.208984375,
+    "p95": 13993.3125,
+    "min": 8378.62890625,
+    "max": 15808.869140625
+  },
+  "participant_utility_million": {
+    "mean": 466.939697265625,
+    "p05": -2012.781982421875,
+    "p50": 448.47705078125,
+    "p95": 2972.4775390625,
+    "min": -4941.4892578125,
+    "max": 5961.916015625
+  },
+  "outside_utility_million": {
+    "mean": -27654.9296875,
+    "p05": -34436.125,
+    "p50": -27615.814453125,
+    "p95": -21005.822265625,
+    "min": -45504.265625,
+    "max": -10286.39453125
+  },
+  "participation_surplus_million": {
+    "mean": 28121.869140625,
+    "p05": 21861.013671875,
+    "p50": 28117.85546875,
+    "p95": 34347.0859375,
+    "min": 12814.67578125,
+    "max": 43720.85546875
+  },
+  "ir_violation_rate": 0.0,
+  "sampled_dsic_regret_million": {
+    "mean": 0.0,
+    "p05": 0.0,
+    "p50": 0.0,
+    "p95": 0.0,
+    "min": 0.0,
+    "max": 0.0
+  },
+  "designer_payoff_million": {
+    "mean": 12424.853515625,
+    "p05": 10712.7587890625,
+    "p50": 12435.357421875,
+    "p95": 14071.806640625,
+    "min": 8478.8798828125,
+    "max": 15913.7861328125
+  },
+  "external_region_ev_million": {
+    "mean": -21294.3984375,
+    "p05": -25543.9453125,
+    "p50": -21261.287109375,
+    "p95": -17239.15625,
+    "min": -30412.400390625,
+    "max": -12740.806640625
+  }
+}
