@@ -1,6 +1,6 @@
 {
   "status": "exact_affine_vcg_private_value_benchmark",
-  "designer": "USA",
+  "designer": "Blue",
   "voluntary_participants": [
     "USALLY"
   ],
@@ -9,8 +9,8 @@
     "CHNALLY",
     "ROW"
   ],
-  "payment_interpretation": "positive is an EV-equivalent concession to USA; negative is compensation",
-  "outside_option": "USALLY utility under the USA-only policy selected when USALLY opts out",
+  "payment_interpretation": "positive is an EV-equivalent concession to Blue; negative is compensation",
+  "outside_option": "USALLY utility under the Blue-only policy selected when USALLY opts out",
   "dsic_scope": "exact for private package values and quasilinear EV-equivalent transfers",
   "profiles": 4096,
   "relative_noise": 0.1,

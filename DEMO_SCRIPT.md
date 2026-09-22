@@ -11,8 +11,8 @@ Open **Geo-Graph**.
 
 ## 0:20–0:55 — Show the learned selector
 
-Move one or two country-report sliders and switch between **Global**, **U.S.**,
-and **U.S. + Ally**.
+Move one or two country-report sliders and switch between **Global**, **Blue**,
+and **Blue + Ally**.
 
 > We train one objective-conditioned network on correlated 10 percent Gaussian
 > perturbations around the GTAP table. Each slider scales one country's entire
@@ -30,7 +30,7 @@ Point to **CAGraph welfare**, **VCG benchmark**, and **Welfare upper bound**.
 
 Point to the country report and **Pays (VCG)** table.
 
-> A positive payment is an EV-equivalent concession to the U.S. designer. A
+> A positive payment is an EV-equivalent concession to the Blue designer. A
 > country can pay even under the status quo because opting out may cause the
 > designer to choose a policy that harms it. CAGraph itself is still a learned
 > policy selector; a learned payment head and regret-constrained incentive audit

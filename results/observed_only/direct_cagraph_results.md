@@ -17,7 +17,7 @@ runs and should not be described as empirical uncertainty estimates.
 The network receives:
 
 - the perturbed signed region-by-policy valuation tensor; and
-- one of three designer-objective vectors: Global, U.S., or U.S. + Ally.
+- one of three designer-objective vectors: Global, Blue, or Blue + Ally.
 
 It outputs a probability distribution over the five observed packages. For the
 hard decision, we select the package with the largest probability. Exact
@@ -48,12 +48,12 @@ argmax decision.
 | Designer objective | CAGraph choice | Exact choice | CAGraph probability | Hard gap |
 |---|---|---|---:|---:|
 | Global | Status quo | Status quo | 89.31% | $0.00m |
-| U.S. | All three | All three | 100.00% | $0.00m |
-| U.S. + Ally | China | China | 100.00% | $0.00m |
+| Blue | All three | All three | 100.00% | $0.00m |
+| Blue + Ally | Red | Red | 100.00% | $0.00m |
 
 ## Country reports and payment benchmark
 
-For the browser demonstration, the U.S. is the designer and the other four
+For the browser demonstration, Blue is the designer and the other four
 regions are potential participants. A report control multiplies one country's
 entire vector of five observed-package values; 100% is the GTAP row. This is a
 restricted report parameterization, not an unrestricted combinatorial bid.
@@ -65,15 +65,15 @@ payments are:
 
 | Participant | Pays, $m |
 |---|---:|
-| China | 17,781.8 |
-| U.S. ally | 29,386.0 |
-| China ally | 1,126.2 |
+| Red | 17,781.8 |
+| Blue ally | 29,386.0 |
+| Red ally | 1,126.2 |
 | Rest of world | 532.2 |
 | **Total** | **48,826.2** |
 
 These positive payments at the status quo arise because the relevant outside
 option is the public policy chosen without that participant, not zero exposure
-to U.S. policy. Each participant prefers its truthful VCG utility to its utility
+to Blue policy. Each participant prefers its truthful VCG utility to its utility
 under that opt-out policy. The total payment is a truthful benchmark, not a
 general revenue lower bound. The exact maximum reported welfare over the five
 packages is shown separately as the welfare upper benchmark.

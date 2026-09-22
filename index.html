@@ -991,7 +991,7 @@ fetch("report/web_models_grid.json")
    Three primitive 10% heavy-manufacturing tariff tools. Singles and the
    all-three package are observed GTAP equivalent variations (million USD).
    ====================================================================== */
-const GEO_COUNTRIES = ["USA", "China", "U.S. ally", "China ally", "Rest of world"];
+const GEO_COUNTRIES = ["Blue", "Red", "Blue ally", "Red ally", "Rest of world"];
 const GEO_COLORS = ["var(--accent)", "var(--china)", "var(--usally)", "var(--chinaally)", "var(--ink-muted)"];
 const GEO_SINGLE = {
   chn: [75.8, -26206, 12800, 1170, 3736],
@@ -1001,15 +1001,15 @@ const GEO_SINGLE = {
 const GEO_ALL = [12392, -13858, -27675, 937, 13433];
 const GEO_PACKAGES = [
   { id:"none", name:"Status quo", tools:[], value:[0,0,0,0,0], observed:true },
-  { id:"chn", name:"China", tools:["China"], value:GEO_SINGLE.chn, observed:true },
-  { id:"usally", name:"U.S. ally", tools:["U.S. ally"], value:GEO_SINGLE.usally, observed:true },
-  { id:"chnally", name:"China ally", tools:["China ally"], value:GEO_SINGLE.chnally, observed:true },
-  { id:"all", name:"All three", tools:["China","U.S. ally","China ally"], value:GEO_ALL, observed:true },
+  { id:"chn", name:"Red", tools:["Red"], value:GEO_SINGLE.chn, observed:true },
+  { id:"usally", name:"Blue ally", tools:["Blue ally"], value:GEO_SINGLE.usally, observed:true },
+  { id:"chnally", name:"Red ally", tools:["Red ally"], value:GEO_SINGLE.chnally, observed:true },
+  { id:"all", name:"All three", tools:["Red","Blue ally","Red ally"], value:GEO_ALL, observed:true },
 ];
 const GEO_OBJECTIVES = {
   global: { label:"Global", weights:[1,1,1,1,1] },
-  usa: { label:"U.S.", weights:[1,0,0,0,0] },
-  bloc: { label:"U.S. + Ally", weights:[1,0,1,0,0] },
+  usa: { label:"Blue", weights:[1,0,0,0,0] },
+  bloc: { label:"Blue + Ally", weights:[1,0,1,0,0] },
 };
 const geoFmt = (x) => `${x < 0 ? "−" : "+"}$${Math.abs(x).toLocaleString(undefined,{maximumFractionDigits:0})}m`;
 let geoLookup=null, geoLearningObjective="global", geoLearningMultipliers=[1,1,1,1];
@@ -1018,7 +1018,7 @@ function geoDisplayName(name) {
   const p=GEO_PACKAGES.find(x=>x.id===GEO_LOOKUP_TO_ID[name]); return p?p.name:name;
 }
 function buildGeoLearningControls() {
-  const labels=["China","U.S. ally","China ally","Rest of world"];
+  const labels=["Red","Blue ally","Red ally","Rest of world"];
   document.getElementById("geoLearningControls").innerHTML=`
     <div><div class="geo-control-label">Designer objective</div><div class="geo-options">${Object.entries(GEO_OBJECTIVES).map(([id,o])=>`<button class="geo-option ${id===geoLearningObjective?"active":""}" data-learning-objective="${id}">${o.label}</button>`).join("")}</div></div>
     <div><div class="geo-control-label">Country package reports</div>${labels.map((label,i)=>`<div class="slider-row"><div class="slider-label"><span><b>${label}</b></span><span class="val" data-learning-output="${i}">${Math.round(geoLearningMultipliers[i]*100)}%</span></div><input type="range" min="0.8" max="1.2" step="0.1" value="${geoLearningMultipliers[i]}" data-learning-slider="${i}" /></div>`).join("")}</div>
@@ -1069,7 +1069,7 @@ function renderGeoLearning() {
     <div class="revenue-row"><div class="stat-tile hi"><div class="stat-label">CAGraph welfare</div><div class="stat-value">${geoFmt(learnedWelfare)}</div><div class="stat-sub">${chosen.name} · ${(record.probability*100).toFixed(1)}%</div></div><div class="stat-tile"><div class="stat-label">VCG benchmark</div><div class="stat-value">${geoFmt(vcg.totalPayment)}</div><div class="stat-sub">total pays · ${exactPackage.name}</div></div><div class="stat-tile"><div class="stat-label">Welfare upper bound</div><div class="stat-value">${geoFmt(vcg.welfare)}</div><div class="stat-sub">exact over five packages</div></div></div>
     <div class="ledger"><table class="ledger-table"><thead><tr><th>Policy bundle</th><th>CAGraph probability</th></tr></thead><tbody>${probabilityRows}</tbody></table></div>
     <div class="ledger"><table class="ledger-table"><thead><tr><th>Country</th><th>Report at ${exactPackage.name}</th><th>Pays (VCG)</th></tr></thead><tbody>${participantRows}</tbody></table></div>
-    <p class="caption">VCG pays belong to the exact truthful benchmark, not the learned CAGraph. USA is the designer; “—” means the country is outside the selected objective.</p>`;
+    <p class="caption">VCG pays belong to the exact truthful benchmark, not the learned CAGraph. Blue is the designer; “—” means the country is outside the selected objective.</p>`;
 }
 fetch("results/observed_only/browser_lookup.json")
   .then(response=>response.ok?response:fetch("../cge_gvc/gtap_policy/results/observed_only/browser_lookup.json"))

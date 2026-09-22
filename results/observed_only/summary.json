@@ -4,7 +4,7 @@
   "seed": 20260922,
   "unit": "million USD EV",
   "countries": [
-    "USA",
+    "Blue",
     "CHN",
     "USALLY",
     "CHNALLY",
@@ -51,7 +51,7 @@
       "cagraph_chosen_value": 0.0,
       "cagraph_expected_value": -21.04119110107422,
       "country_ev_at_completed_exact_choice": {
-        "USA": 0.0,
+        "Blue": 0.0,
         "CHN": 0.0,
         "USALLY": 0.0,
         "CHNALLY": 0.0,
@@ -70,7 +70,7 @@
       "cagraph_chosen_value": 12392.0,
       "cagraph_expected_value": 12392.0,
       "country_ev_at_completed_exact_choice": {
-        "USA": 12392.0,
+        "Blue": 12392.0,
         "CHN": -13858.0,
         "USALLY": -27675.0,
         "CHNALLY": 937.0,
@@ -89,7 +89,7 @@
       "cagraph_chosen_value": 12875.7998046875,
       "cagraph_expected_value": 12875.7998046875,
       "country_ev_at_completed_exact_choice": {
-        "USA": 75.8,
+        "Blue": 75.8,
         "CHN": -26206.0,
         "USALLY": 12800.0,
         "CHNALLY": 1170.0,
