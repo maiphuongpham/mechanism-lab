@@ -260,8 +260,10 @@
   .geo-option { border: 1px solid var(--line); background: var(--surface-2); color: var(--ink-muted); border-radius: 2px; padding: 7px 9px; cursor: pointer; font: 11px var(--sans); }
   .geo-option.active { color: var(--ink); border-color: var(--accent); background: var(--accent-soft); font-weight: 700; }
   .geo-packages { display:grid; grid-template-columns:repeat(auto-fit,minmax(132px,1fr)); gap:7px; }
-  .geo-package { padding:9px; border:1px solid var(--line); background:var(--surface-2); border-radius:2px; }
+  .geo-package { padding:9px; border:1px solid var(--line); background:var(--surface-2); color:var(--ink); border-radius:2px; text-align:left; font-family:var(--sans); cursor:pointer; }
+  .geo-package:hover { border-color:var(--line-strong); }
   .geo-package.selected { border-color:var(--accent); background:var(--accent-soft); }
+  .geo-package.inspected { box-shadow:inset 0 0 0 2px var(--ink); }
   .geo-package-name { font-size:12px; font-weight:700; }
   .geo-package-sub { font:10px var(--mono); color:var(--ink-faint); margin-top:3px; }
   .geo-warning { border-left:3px solid var(--china); padding:7px 0 7px 11px; color:var(--ink-muted); font-size:12px; line-height:1.45; }
@@ -323,7 +325,7 @@
   <section class="mode active" id="mode-geograph">
     <div class="subswitch" id="geoTabs" role="tablist">
       <button class="active" data-geo="deterministic" role="tab">1 · Deterministic GTAP</button>
-      <button data-geo="uncertainty" role="tab">2 · Uncertainty + learning</button>
+      <button data-geo="uncertainty" role="tab">2 · Uncertainty + Geo-Graph</button>
     </div>
     <div class="geo-submode active" id="geo-deterministic">
       <div class="stage">
@@ -332,7 +334,10 @@
       </div>
     </div>
     <div class="geo-submode" id="geo-uncertainty">
-      <div class="panel panel-pad"><div class="results-grid" id="geoLearningResults"></div></div>
+      <div class="stage">
+        <div class="panel panel-pad"><div class="geo-controls" id="geoLearningControls"></div></div>
+        <div class="panel panel-pad"><div class="results-grid" id="geoLearningResults"></div></div>
+      </div>
     </div>
   </section>
 
@@ -1022,7 +1027,7 @@ const GEO_OBJECTIVES = {
   usa: { label:"U.S.", weights:[1,0,0,0,0] },
   bloc: { label:"U.S. + Ally", weights:[1,0,1,0,0] },
 };
-let geoDependence = "interdependent", geoObjective = "global";
+let geoDependence = "interdependent", geoObjective = "global", geoInspectId = null;
 const GEO_TARGETS = { China:{ key:"chn", country:1 }, "U.S. ally":{ key:"usally", country:2 }, "China ally":{ key:"chnally", country:3 } };
 function geoValue(p, dependence=geoDependence) {
   if (dependence === "interdependent") return p.value;
@@ -1038,35 +1043,64 @@ function buildGeoControls() {
   el.innerHTML = `
     <div><div class="geo-control-label">Valuation structure</div><div class="geo-options"><button class="geo-option ${geoDependence==="own"?"active":""}" data-dependence="own">Independent</button><button class="geo-option ${geoDependence==="interdependent"?"active":""}" data-dependence="interdependent">Interdependent</button></div></div>
     <div><div class="geo-control-label">Designer objective</div><div class="geo-options">${Object.entries(GEO_OBJECTIVES).map(([id,o])=>`<button class="geo-option ${id===geoObjective?"active":""}" data-objective="${id}">${o.label}</button>`).join("")}</div></div>`;
-  el.querySelectorAll("[data-dependence]").forEach(b=>b.addEventListener("click",()=>{geoDependence=b.dataset.dependence; buildGeoControls(); renderGeo();}));
-  el.querySelectorAll("[data-objective]").forEach(b=>b.addEventListener("click",()=>{geoObjective=b.dataset.objective; buildGeoControls(); renderGeo();}));
+  el.querySelectorAll("[data-dependence]").forEach(b=>b.addEventListener("click",()=>{geoDependence=b.dataset.dependence; geoInspectId=null; buildGeoControls(); renderGeo();}));
+  el.querySelectorAll("[data-objective]").forEach(b=>b.addEventListener("click",()=>{geoObjective=b.dataset.objective; geoInspectId=null; buildGeoControls(); renderGeo();}));
 }
 function renderGeo() {
   const ps=geoAllowed(), scores=ps.map(geoScore), max=Math.max(...scores), best=ps[scores.indexOf(max)];
   const bestValue=geoValue(best);
+  const viewed=ps.find(p=>p.id===geoInspectId) || best, viewedValue=geoValue(viewed);
   const myopicScores=ps.map((p)=>geoScore(p,"own")), myopic=ps[myopicScores.indexOf(Math.max(...myopicScores))], myopicScore=geoScore(myopic);
   const total=bestValue.reduce((a,b)=>a+b,0), compensate=bestValue.reduce((s,x)=>s+Math.max(0,-x),0);
   const all=GEO_PACKAGES.find(p=>p.id==="all"), allValue=geoValue(all);
   const allResidual=allValue.map((x,i)=>x-geoValue(GEO_PACKAGES.find(p=>p.id==="chn"))[i]-geoValue(GEO_PACKAGES.find(p=>p.id==="usally"))[i]-geoValue(GEO_PACKAGES.find(p=>p.id==="chnally"))[i]);
-  const pCards=ps.map((p,i)=>`<div class="geo-package ${p.id===best.id?"selected":""}"><div class="geo-package-name">${p.name}</div><div class="geo-package-sub">${geoFmt(scores[i])}</div></div>`).join("");
-  const rows=GEO_COUNTRIES.map((n,i)=>`<tr><td><span class="actor-chip" style="color:${GEO_COLORS[i]}"><span class="chip-dot" style="--dot-c:${GEO_COLORS[i]}"></span>${n}</span></td><td class="pay-cell"><span class="signed ${bestValue[i]<0?"neg":"pos"}">${geoFmt(bestValue[i])}</span></td><td class="pay-cell"><span class="signed ${allResidual[i]<0?"neg":"pos"}">${geoFmt(allResidual[i])}</span></td></tr>`).join("");
+  const pCards=ps.map((p,i)=>`<button type="button" class="geo-package ${p.id===best.id?"selected":""} ${p.id===viewed.id?"inspected":""}" data-geo-package="${p.id}"><div class="geo-package-name">${p.name}</div><div class="geo-package-sub">${geoFmt(scores[i])}</div></button>`).join("");
+  const rows=GEO_COUNTRIES.map((n,i)=>`<tr><td><span class="actor-chip" style="color:${GEO_COLORS[i]}"><span class="chip-dot" style="--dot-c:${GEO_COLORS[i]}"></span>${n}</span></td><td class="pay-cell"><span class="signed ${viewedValue[i]<0?"neg":"pos"}">${geoFmt(viewedValue[i])}</span></td><td class="pay-cell"><span class="signed ${allResidual[i]<0?"neg":"pos"}">${geoFmt(allResidual[i])}</span></td></tr>`).join("");
   document.getElementById("geoResults").innerHTML=`
     <div class="revenue-row"><div class="stat-tile"><div class="stat-label">Status quo</div><div class="stat-value">$0m</div></div><div class="stat-tile"><div class="stat-label">Myopic benchmark</div><div class="stat-value" style="font-size:19px">${myopic.name}</div><div class="stat-sub">${geoFmt(myopicScore)}</div></div><div class="stat-tile hi"><div class="stat-label">Exact planner</div><div class="stat-value" style="font-size:19px">${best.name}</div><div class="stat-sub">${geoFmt(max)} · IR compensation $${compensate.toLocaleString(undefined,{maximumFractionDigits:0})}m</div></div></div>
-    <div><div class="stat-label">Observed policy packages</div><div class="geo-packages">${pCards}</div></div>
-    <div class="ledger"><table class="ledger-table"><thead><tr><th>Country</th><th>Selected outcome</th><th>Bundle interaction</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+    <div><div class="stat-label">Policy Bundle (10% tariff on heavy manufacturing)</div><div class="geo-packages">${pCards}</div></div>
+    <div class="ledger"><table class="ledger-table"><thead><tr><th>Country</th><th>${viewed.name} outcome</th><th>Bundle interaction</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  document.querySelectorAll("[data-geo-package]").forEach((button)=>button.addEventListener("click",()=>{geoInspectId=button.dataset.geoPackage;renderGeo();}));
+}
+let geoLookup=null, geoLearningObjective="global", geoLearningMultipliers=[1,1,1];
+const GEO_LOOKUP_TO_ID={status_quo:"none",CHN:"chn",USALLY:"usally",CHNALLY:"chnally",ALL_three:"all"};
+function geoDisplayName(name) {
+  const p=GEO_PACKAGES.find(x=>x.id===GEO_LOOKUP_TO_ID[name]); return p?p.name:name;
+}
+function buildGeoLearningControls() {
+  const labels=["U.S. values","U.S. ally values","Other-country values"];
+  document.getElementById("geoLearningControls").innerHTML=`
+    <div><div class="geo-control-label">Designer objective</div><div class="geo-options">${Object.entries(GEO_OBJECTIVES).map(([id,o])=>`<button class="geo-option ${id===geoLearningObjective?"active":""}" data-learning-objective="${id}">${o.label}</button>`).join("")}</div></div>
+    <div>${labels.map((label,i)=>`<div class="slider-row"><div class="slider-label"><span><b>${label}</b></span><span class="val" data-learning-output="${i}">${Math.round(geoLearningMultipliers[i]*100)}%</span></div><input type="range" min="0.8" max="1.2" step="0.05" value="${geoLearningMultipliers[i]}" data-learning-slider="${i}" /></div>`).join("")}</div>
+    <button type="button" class="reset-link" id="geoLearningReset">↺ reset</button>`;
+  document.querySelectorAll("[data-learning-objective]").forEach(b=>b.addEventListener("click",()=>{geoLearningObjective=b.dataset.learningObjective;buildGeoLearningControls();renderGeoLearning();}));
+  document.querySelectorAll("[data-learning-slider]").forEach(input=>input.addEventListener("input",()=>{const i=+input.dataset.learningSlider;geoLearningMultipliers[i]=+input.value;document.querySelector(`[data-learning-output="${i}"]`).textContent=`${Math.round(+input.value*100)}%`;renderGeoLearning();}));
+  document.getElementById("geoLearningReset").addEventListener("click",()=>{geoLearningMultipliers=[1,1,1];buildGeoLearningControls();renderGeoLearning();});
 }
 function renderGeoLearning() {
-  const rows = [
-    ["Global", "Status quo", "Status quo", "89.3%"],
-    ["U.S.", "All three", "All three", "100.0%"],
-    ["U.S. + Ally", "China", "China", "100.0%"],
-  ].map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td class="pay-cell"><b>${r[3]}</b></td></tr>`).join("");
-  document.getElementById("geoLearningResults").innerHTML = `
-    <div class="revenue-row"><div class="stat-tile hi"><div class="stat-label">Exact-package agreement</div><div class="stat-value">99.51%</div></div><div class="stat-tile"><div class="stat-label">Mean hard-choice gap</div><div class="stat-value">$0.04m</div></div><div class="stat-tile"><div class="stat-label">Mean lottery gap</div><div class="stat-value">$4.39m</div></div></div>
-    <div class="ledger"><table class="ledger-table"><thead><tr><th>Objective</th><th>Exact</th><th>Geo-Graph</th><th>Probability</th></tr></thead><tbody>${rows}</tbody></table></div>
-    <p class="caption">One objective-conditioned model · 4,096 held-out profiles · 10% synthetic sensitivity around the GTAP values.</p>`;
+  const el=document.getElementById("geoLearningResults");
+  if(!geoLookup){el.innerHTML='<p class="caption">Loading cached Geo-Graph outcomes…</p>';return;}
+  const key=geoLearningMultipliers.map(x=>Math.round(x*100)).join("_");
+  const record=geoLookup.objectives[geoLearningObjective][key];
+  const chosen=GEO_PACKAGES.find(p=>p.id===GEO_LOOKUP_TO_ID[record.choice]);
+  const scaled=chosen.value.map((value,i)=>value*(i===0?geoLearningMultipliers[0]:(i===2?geoLearningMultipliers[1]:geoLearningMultipliers[2])));
+  const outcomeRows=GEO_COUNTRIES.map((name,i)=>`<tr><td><span class="actor-chip" style="color:${GEO_COLORS[i]}"><span class="chip-dot" style="--dot-c:${GEO_COLORS[i]}"></span>${name}</span></td><td class="pay-cell"><span class="signed ${scaled[i]<0?"neg":"pos"}">${geoFmt(scaled[i])}</span></td></tr>`).join("");
+  const probabilityRows=geoLookup.observed_package_names.map((name,i)=>`<tr><td>${geoDisplayName(name)}</td><td class="alloc-cell"><div class="alloc-bar-track"><div class="alloc-bar-fill" style="width:${(record.probabilities[i]*100).toFixed(1)}%;--fill-c:var(--accent)"></div><div class="alloc-bar-label">${(record.probabilities[i]*100).toFixed(1)}%</div></div></td></tr>`).join("");
+  el.innerHTML=`
+    <div class="revenue-row"><div class="stat-tile hi"><div class="stat-label">Geo-Graph</div><div class="stat-value" style="font-size:20px">${geoDisplayName(record.choice)}</div><div class="stat-sub">${(record.probability*100).toFixed(1)}% probability</div></div><div class="stat-tile"><div class="stat-label">Exact planner</div><div class="stat-value" style="font-size:20px">${geoDisplayName(record.exact)}</div><div class="stat-sub">gap $${record.gap.toFixed(2)}m</div></div></div>
+    <div class="ledger"><table class="ledger-table"><thead><tr><th>Policy bundle</th><th>Geo-Graph probability</th></tr></thead><tbody>${probabilityRows}</tbody></table></div>
+    <div class="ledger"><table class="ledger-table"><thead><tr><th>Country</th><th>${geoDisplayName(record.choice)} outcome</th></tr></thead><tbody>${outcomeRows}</tbody></table></div>
+    <p class="caption">Cached inference · held-out agreement 99.51% · 10% synthetic training sensitivity.</p>`;
 }
-buildGeoControls(); renderGeo(); renderGeoLearning();
+fetch("results/observed_only/browser_lookup.json")
+  .then(response=>response.ok?response:fetch("../cge_gvc/gtap_policy/results/observed_only/browser_lookup.json"))
+  .then(response=>{if(!response.ok)throw new Error(`HTTP ${response.status}`);return response.json();})
+  .then(data=>{geoLookup=data;renderGeoLearning();})
+  .catch(()=>{document.getElementById("geoLearningResults").innerHTML='<div class="geo-warning">Cached Geo-Graph outcomes unavailable.</div>';});
+buildGeoControls(); renderGeo(); buildGeoLearningControls(); renderGeoLearning();
+if (new URLSearchParams(window.location.search).get("geo") === "uncertainty") {
+  setGeoMode("uncertainty");
+}
 
 /* ======================================================================
    FIELD NOTES — charts + summary table
