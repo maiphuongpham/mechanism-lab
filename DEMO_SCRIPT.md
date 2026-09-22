@@ -11,30 +11,32 @@ Open **Geo-Graph**.
 
 ## 0:20–0:55 — Show the learned selector
 
-Move one or two valuation sliders and switch between **Global**, **U.S.**, and
-**U.S. + Ally**.
+Move one or two country-report sliders and switch between **Global**, **U.S.**,
+and **U.S. + Ally**.
 
 > We train one objective-conditioned network on correlated 10 percent Gaussian
-> perturbations around the GTAP table. The bars are probabilities over policy
-> packages—not fractional tariff rates. The screen compares CAGraph with exact
-> enumeration of the same five observed packages.
+> perturbations around the GTAP table. Each slider scales one country's entire
+> vector of package reports; 100 percent is its GTAP row. The bars are
+> probabilities over policy packages—not fractional tariff rates.
 
-Point to the two choices and the gap.
+Point to **CAGraph welfare**, **VCG benchmark**, and **Welfare upper bound**.
 
 > On 4,096 held-out profiles, CAGraph selects the exact package 99.51 percent of
 > the time. Its mean hard-decision optimality gap is 0.04 million dollars, with
-> a worst observed gap of 15.33 million.
+> a worst observed gap of 15.33 million. The VCG column is a separate exact,
+> truthful public-choice benchmark; it is not the learned network's payment.
 
 ## 0:55–1:15 — Interpretation
 
-Point to the country outcome table.
+Point to the country report and **Pays (VCG)** table.
 
-> This shows why signed, cross-country values matter: one package can benefit
-> the designer while imposing losses elsewhere. It is a policy-selection
-> result, not yet an incentive-compatible mechanism. Pricing, strategic reports,
-> IR, dynamics, and richer GTAP counterfactuals are the next layer.
+> A positive payment is an EV-equivalent concession to the U.S. designer. A
+> country can pay even under the status quo because opting out may cause the
+> designer to choose a policy that harms it. CAGraph itself is still a learned
+> policy selector; a learned payment head and regret-constrained incentive audit
+> remain the next layer.
 
 ## If limited to one minute
 
-Use the first two paragraphs, move one slider, cite **99.51% agreement** and the
-**$0.04m mean gap**, then end with the final sentence.
+Use the first two paragraphs, move one report slider, cite **99.51% agreement**,
+and state that **VCG pays are a separate exact benchmark**.
