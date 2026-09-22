@@ -1,49 +1,48 @@
 # Geoeconomic Mechanism Lab — 75–90 second demo
 
-## 0:00–0:15 — What changed
+## 0:00–0:15 — Allocation under uncertainty
 
-Open **Geo-Graph → Deterministic GTAP** with **Interdependent / Global** selected.
+Open **Geo-Graph → Allocation + uncertainty**. Move **Other-country values**.
 
-> Last month we used a stylized positive-value auction. Geo-Graph now injects
-> GTAP outcomes, allows welfare losses, and models how one policy affects every
-> country—not only its target.
+> We now replace the stylized positive values with signed GTAP outcomes. One
+> objective-conditioned Geo-Graph selects among the five observed tariff
+> packages while accounting for effects on every region. The browser uses
+> cached offline inference; across 4,096 sensitivity profiles it matches exact
+> enumeration 99.51% of the time.
 
-## 0:15–0:40 — Deterministic policy choice
+## 0:15–1:05 — Pricing, participation, and truthfulness
 
-Click **China**, then **All three**, so the country outcomes change. Return to
-**Status quo**, then select the **U.S.** objective.
+Open **Pricing + incentives**. Keep the sliders at 100% initially.
 
-> These are the five policy bundles actually observed in GTAP. Under global
-> welfare, the exact planner retains the status quo because every tariff bundle
-> has negative aggregate equivalent variation. If the objective changes to U.S.
-> welfare, all three tariffs are selected—but the table exposes large losses
-> elsewhere and the compensation needed for participation.
+> We treat the U.S. ally as the voluntary negotiating participant. China,
+> China-aligned economies, and the rest of the world remain affected external
+> parties, so their losses are displayed but are not protected by IR.
 
-## 0:40–1:10 — Uncertainty and learning
+Point to **Ally concession**, **Participation IR**, and **DSIC benchmark**.
 
-Open **Uncertainty + Geo-Graph**. Move **Other-country values** to 80%, then move
-**U.S. ally values** to 120%.
+> The exact affine-VCG control selects the China-targeted tariff and prices the
+> ally's concession at 12.3 billion dollars in EV-equivalent units. Participation
+> IR compares joining with the tariff policy the U.S. would choose if the ally
+> opted out—not with an artificial zero payoff. Truthful participation passes,
+> and the private-value, quasilinear benchmark is exactly DSIC.
 
-> A single GTAP table is deterministic, so we introduce sensitivity around the
-> calibration and train one objective-conditioned Geo-Graph. The sliders read
-> cached offline neural evaluations: learned probabilities, the exact control,
-> optimality gap, and country outcomes update together. Across 4,096 held-out
-> profiles, Geo-Graph matches the exact package 99.51% of the time, with a mean
-> hard-choice gap of only 0.04 million dollars.
+Move **Ally report** away from 100%.
 
-## 1:10–1:25 — Close
+> A false report cannot improve the ally's true utility; the displayed
+> misreport gain is nonpositive. This truthfulness statement belongs to the
+> exact benchmark. The learned Geo-Graph payment mechanism will instead require
+> an ex-post regret constraint and audit.
 
-Briefly click **CANet**, then return to **Geo-Graph**.
+## 1:05–1:20 — Close
 
-> CANet remains our auction baseline, where bids, payments, VCG, and regret are
-> defined. Geo-Graph extends it to signed, interdependent public-policy effects.
-> Next we replace synthetic sensitivity with estimated uncertainty and add
-> strategic reporting and dynamics.
+Point to **External-region EV**.
+
+> The mechanism is individually rational for the voluntary ally, but it still
+> imposes about 21.3 billion dollars of losses on external regions. That is the
+> central geoeconomic distinction: strategic participation and geopolitical
+> externalities must be modeled separately.
 
 ## If limited to exactly one minute
 
-Skip the policy-card clicks and CANet tab. Show only:
-
-1. **Global → U.S.** in Deterministic GTAP.
-2. One slider movement in Uncertainty + Geo-Graph.
-3. The 99.51% agreement result and closing sentence.
+Skip the first tab. Show only **Pricing + incentives**, the concession, IR,
+DSIC, one report-slider movement, and external-region EV.
